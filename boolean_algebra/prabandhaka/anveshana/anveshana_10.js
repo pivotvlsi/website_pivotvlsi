@@ -1,0 +1,121 @@
+/**
+ * Checks if a given AST node is a leaf (a plain logic term array).
+ */
+function पत्र_अस्ति(शाखा) {
+    if (!Array.isArray(शाखा)) return false;
+    for (let इ = 0; इ < शाखा.length; इ++) {
+        if (typeof शाखा[इ] !== 'number') return false;
+    }
+    return true;
+}
+
+/**
+ * Extracts the variables of an OR-term.
+ * Returns an array of {index, val} or null if it's too complex or not an OR-term.
+ */
+function पद_चराः_प्राप्त_करो(शाखा, पितृ_संकारक) {
+    if (पत्र_अस्ति(शाखा)) {
+        let चराः = [];
+        for (let इ = 0; इ < शाखा.length - 1; इ++) {
+            if (शाखा[इ] === 0 || शाखा[इ] === 1) {
+                चराः.push({ सूचकांक: इ, मूल्य: शाखा[इ] });
+            } else if (शाखा[इ] === 3) {
+                return null;
+            }
+        }
+        // If under AND (0, 2), it's only an OR-term if it has exactly 1 variable (e.g., A)
+        // because multi-variable leaves under AND represent AND-terms (A.B)
+        if ((पितृ_संकारक === 0 || पितृ_संकारक === 2) && चराः.length > 1) {
+            return null;
+        }
+        return चराः;
+    } else if (Array.isArray(शाखा) && (शाखा[0] === 1 || शाखा[0] === 3)) {
+        let चराः = [];
+        for (let इ = 1; इ < शाखा.length; इ++) {
+            let शिशु = शाखा[इ];
+            if (पत्र_अस्ति(शिशु)) {
+                for (let ज = 0; ज < शिशु.length - 1; ज++) {
+                    if (शिशु[ज] === 0 || शिशु[ज] === 1) {
+                        चराः.push({ सूचकांक: ज, मूल्य: शिशु[ज] });
+                    } else if (शिशु[ज] === 3) {
+                        return null;
+                    }
+                }
+            } else {
+                return null; // Complex nested
+            }
+        }
+        
+        let अद्वितीय_चराः = [];
+        for (let च of चराः) {
+            if (!अद्वितीय_चराः.some(अच => अच.सूचकांक === च.सूचकांक && अच.मूल्य === च.मूल्य)) {
+                अद्वितीय_चराः.push(च);
+            }
+        }
+        return अद्वितीय_चराः;
+    }
+    return null;
+}
+
+/**
+ * Recursively traverses the AST to find the first occurrence of Absorption 2: A . (A+B)
+ * This is identified by an AND node containing an OR-term (A) that is a strict subset of another OR-term (A+B).
+ */
+function पुनरावर्ती_अन्वेषण(शाखा, वर्तमान_मार्ग) {
+    if (पत्र_अस्ति(शाखा)) return null;
+
+    let संकारक = शाखा[0];
+    
+    if (संकारक === 0 || संकारक === 2) {
+        let पदानि = [];
+        for (let इ = 1; इ < शाखा.length; इ++) {
+            let शिशु = शाखा[इ];
+            let चराः = पद_चराः_प्राप्त_करो(शिशु, संकारक);
+            if (चराः && चराः.length > 0) {
+                पदानि.push({ शिशु_सूचकांक: इ, चराः: चराः });
+            }
+        }
+        
+        for (let इ = 0; इ < पदानि.length; इ++) {
+            for (let ज = 0; ज < पदानि.length; ज++) {
+                if (इ === ज) continue;
+                let प१ = पदानि[इ];
+                let प२ = पदानि[ज];
+                
+                if (प१.चराः.length < प२.चराः.length) {
+                    let उपसमुच्चय_अस्ति = true;
+                    for (let च१ of प१.चराः) {
+                        if (!प२.चराः.some(च२ => च१.सूचकांक === च२.सूचकांक && च१.मूल्य === च२.मूल्य)) {
+                            उपसमुच्चय_अस्ति = false;
+                            break;
+                        }
+                    }
+                    if (उपसमुच्चय_अस्ति) {
+                        return [ [...वर्तमान_मार्ग, प१.शिशु_सूचकांक], [...वर्तमान_मार्ग, प२.शिशु_सूचकांक] ];
+                    }
+                }
+            }
+        }
+    }
+
+    for (let इ = 1; इ < शाखा.length; इ++) {
+        let उप_मार्ग = [...वर्तमान_मार्ग, इ];
+        let परिणाम = पुनरावर्ती_अन्वेषण(शाखा[इ], उप_मार्ग);
+        if (परिणाम) {
+            return परिणाम; 
+        }
+    }
+    
+    return null;
+}
+
+/**
+ * अन्वेषण_अवशोषण_२ (Find Absorption Law 2: A . (A+B) = A)
+ */
+function अन्वेषण_अवशोषण_२(पूर्ण_सूत्रम्) {
+    return पुनरावर्ती_अन्वेषण(पूर्ण_सूत्रम्, []);
+}
+
+module.exports = {
+    अन्वेषण_अवशोषण_२
+};

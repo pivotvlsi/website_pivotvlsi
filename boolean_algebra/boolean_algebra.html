@@ -1,49 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIVOT VLSI | Boolean algebra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="boolean_algebra.css">
 </head>
-<body class="teaser-body">
+
+<body class="शरीरम्">
     <header id="शीर्षपट्टिका">
         <div id="चिह्नपात्रम्">
-            <a href="../home_page/index.html">
-                <img src="../home_page/company_logo.png" alt="PIVOT Logo" id="चिह्नम्">
-            </a>
+            <img src="../home_page/company_logo.png" alt="PIVOT VLSI Institute Logo" id="चिह्नम्">
         </div>
         <ul id="मार्गसञ्चारकडी">
-            <li><a href="../home_page/index.html">Home</a></li>
-            <li><a href="../home_page/contact.html">Contact us</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a></li>
+            <li><a href="../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a></li>
+            <li><a href="../about_us/about_us.html">About</a></li>
+            <li><a href="../home_page/contact.html">Contact</a></li>
         </ul>
     </header>
-    <main class="solver-container">
+    <main class="मुख्यपात्रम्">
+        <h2 style="text-align: center; color: var(--text-primary); margin-bottom: 20px;">Boolean Algebra Tool</h2>
 
-        <section class="control-card">
-            <button id="roll-btn" class="piv-btn primary">Generate Problem</button>
-        </section>
-        <div class="random-container">
-                <span id="number-display"></span>
-        </div>
-        <section class="glass-card scratch-section">
-            <textarea id="scratch-space" placeholder="Use this space for your work..."></textarea>
-        </section>
-        <section class="glass-card logic-card">
-            <div class="input-group">
-                <input type="text" id="minterm-input" placeholder="ENTER YOUR ANSWER HERE AS SOP">
+        <div class="समस्या-पट्टिका">
+            <div class="विकल्प-समूहः">
+                <select id="format-select" class="विकल्प-सूची">
+                    <option value="select" selected>Select</option>
+                    <option value="SOP">SOP</option>
+                    <option value="POS">POS</option>
+                    <option value="ANY">Any</option>
+                </select>
+                <i class="fas fa-arrow-right" style="color: var(--text-primary); margin: 0 10px;"></i>
+                <select id="target-format-select" class="विकल्प-सूची">
+                    <option value="select" selected>Select</option>
+                    <option value="SOP">SOP</option>
+                    <option value="POS">POS</option>
+                    <option value="MIN">min term</option>
+                    <option value="MAX">max term</option>
+                </select>
             </div>
-            
-            <button id="check-btn" class="piv-btn accent">
-                Check Result
+
+            <div class="समस्या-प्रदर्शनम्" style="flex-grow: 1; padding: 0 15px; overflow-x: auto; display: flex;">
+                <textarea id="सङ्ख्या-प्रदर्शनम्" class="समस्या-निवेशनम्" placeholder="Boolean Expression"
+                    style="flex: 1 0 auto; min-width: 400px; font-size: 1.3rem; padding: 12px; letter-spacing: 1px; resize: none; overflow: hidden; white-space: nowrap;"
+                    rows="1"></textarea>
+            </div>
+
+            <div class="कील-समूहः">
+                <button id="चालन-गुण्डिका" class="उपकरणकीलः"><i class="fas fa-random"></i> Generate</button>
+                <button id="बन्धन-गुण्डिका" class="उपकरणकीलः" style="background-color: rgba(40, 167, 69, 0.8);"><i
+                        class="fas fa-unlock"></i> Lock</button>
+            </div>
+        </div>
+
+        <section id="step-section" class="काच-पत्रम् तर्क-पत्रम्"
+            style="width: 100%; max-width: 800px; margin: 20px auto 0 auto; display: none; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;">
+            <div id="पद-पात्रम्" class="पद-पात्रम्" style="min-height: min-content;">
+                <!-- Dynamic step rows will go here -->
+            </div>
+        </section>
+
+        <section id="control-section" class="नियन्त्रण-पत्रम्"
+            style="margin: 20px auto 20px auto; text-align: center; display: none; flex-shrink: 0;">
+            <button id="परीक्षण-गुण्डिका" class="उपकरणकीलः">
+                <i class="fas fa-check-circle"></i> Check Result
+            </button>
+            <button id="संकेत-गुण्डिका" class="उपकरणकीलः" style="background-color: #f39c12; margin-left: 10px;">
+                <i class="fas fa-lightbulb"></i> Hint
             </button>
 
-            <div class="feedback-area">
-                <span id="result_validation" class="status-msg"></span>
+            <div class="प्रतिक्रिया-क्षेत्रम्" style="margin-top: 15px;">
+                <span id="परिणाम-प्रमाणीकरणम्" class="स्थिति-सन्देशः"
+                    style="color: var(--accent-blue); font-size: 1.2rem;"></span>
             </div>
         </section>
     </main>
 
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="prabandhaka/random_boolean_generator/yadrucchika_soochi.js"></script>
+    <script> Object.assign(window, module.exports); module.exports = {}; </script>
+    <script src="prabandhaka/saranitah_sutram/saranitah_sutram.js"></script>
+    <script> Object.assign(window, module.exports); module.exports = {}; </script>
+    <script src="prabandhaka/satyata_saarani_prarambha/sootra_vibhajana.js"></script>
+    <script> Object.assign(window, module.exports); module.exports = {}; </script>
+    <script src="prabandhaka/satyata_saarani_prarambha/satyata_saarani_prarambha.js"></script>
+    <script> Object.assign(window, module.exports); module.exports = {}; </script>
+    <script src="prabandhaka/saralikarana/saralikarana.js"></script>
+    <script> Object.assign(window, module.exports); module.exports = {}; </script>
+    <script src="prabandhaka/prabandhaka.js"></script>
+    <script> Object.assign(window, module.exports); module.exports = {}; </script>
     <script src="boolean_algebra.js"></script>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>PIVOT VLSI</h4>
+                <p>Elevating your potential through premier educational programs.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="../index.html">Home</a>
+                <a href="../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a>
+                <a href="../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a>
+                <a href="../about_us/about_us.html">About</a>
+                <a href="../home_page/contact.html">Contact</a>
+                <a href="../sitemap.xml">Sitemap</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <p>Email: info@pivotvlsi.in</p>
+                <div style="margin-top: 15px; display: flex; gap: 15px;">
+                    <a href="https://www.youtube.com/@PIVOT-vlsi" target="_blank" rel="noopener noreferrer"
+                        style="color: #ff0000; display: inline-flex; align-items: center; transition: 0.3s;"
+                        onmouseover="this.style.transform=\'scale(1.2)\'" onmouseout="this.style.transform=\'scale(1)\'"
+                        aria-label="YouTube">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="currentColor">
+                            <path
+                                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/company/pivot-vlsi/" target="_blank" rel="noopener noreferrer"
+                        style="color: #0077b5; display: inline-flex; align-items: center; transition: 0.3s;"
+                        onmouseover="this.style.transform=\'scale(1.2)\'" onmouseout="this.style.transform=\'scale(1)\'"
+                        aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="currentColor">
+                            <path
+                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 PIVOT VLSI. All rights reserved.
+        </div>
+    </footer>
+
 </body>
+
 </html>
