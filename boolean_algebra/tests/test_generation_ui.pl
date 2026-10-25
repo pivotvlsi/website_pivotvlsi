@@ -144,6 +144,52 @@ if ($iterations_passed) {
     fail_test("Failed repeated generation iterations in HTML UI.");
 }
 
+# -------------------------------------------------------------
+# Scenario 5: Validate Target Dropdown Options and Expression Textbox Scrollability
+# -------------------------------------------------------------
+print "\n============================================\n";
+print "Scenario 5: Validate Target Dropdown & Textbox Scrollability\n";
+print "============================================\n";
+
+# Sub-test A: Target dropdown contains only 'select', 'SOP', 'POS'
+my $target_options = $driver->execute_script(q{
+    var opts = document.getElementById('target-format-select').options;
+    var res = [];
+    for (var i = 0; i < opts.length; i++) {
+        res.push(opts[i].value);
+    }
+    return res.join(',');
+});
+print "Target format options: $target_options\n";
+if ($target_options eq "select,SOP,POS") {
+    pass_test("Target dropdown correctly contains only 'select', 'SOP', and 'POS'.");
+} else {
+    fail_test("Target dropdown options mismatch. Expected 'select,SOP,POS', got: $target_options");
+}
+
+# Sub-test B: Long expression triggers horizontal scrollability
+my $scroll_info = $driver->execute_script(q{
+    var el = document.getElementById('सङ्ख्या-प्रदर्शनम्');
+    // Set a very long expression
+    el.value = "((A.B.C.D.E.F)+(A'.B.C'.D.E'.F)+(A.B'.C.D'.E.F')+(A'.B'.C'.D'.E'.F')+(A.B.C'.D'.E.F)+(B.C.D.E.F))";
+    var style = window.getComputedStyle(el);
+    return {
+        overflowX: style.overflowX,
+        scrollWidth: el.scrollWidth,
+        clientWidth: el.clientWidth,
+        isScrollable: el.scrollWidth > el.clientWidth
+    };
+});
+
+print "Textbox computed overflow-x: " . $scroll_info->{overflowX} . "\n";
+print "Textbox scrollWidth: " . $scroll_info->{scrollWidth} . ", clientWidth: " . $scroll_info->{clientWidth} . "\n";
+
+if (($scroll_info->{overflowX} eq 'auto' || $scroll_info->{overflowX} eq 'scroll') && $scroll_info->{isScrollable}) {
+    pass_test("Expression textbox has overflow-x auto and enables horizontal scrolling when content overflows.");
+} else {
+    fail_test("Expression textbox is not horizontally scrollable when overflowing.");
+}
+
 $driver->quit();
 
 print "\n============================================\n";
