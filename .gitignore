@@ -1,0 +1,49 @@
+# Operating System files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editor & IDE settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.agents/
+
+# Dependency directories & package managers
+node_modules/
+jspm_packages/
+
+# WebDriver & Automation binaries / zips
+chromedriver*
+*.exe
+*.zip
+*.tar.gz
+
+# Test outputs & logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*_test/
+*_test_suite/
+test_output.log
+
+# Temporary / scratch / copy directories
+*copy/
+*copy*/
+*.tmp
+*.bak
+*.swp
+*~
+
+# Large media files (videos)
+*.mp4
