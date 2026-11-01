@@ -23,9 +23,6 @@ SET1 0
 
 ; [0x4]: High Phase Delay (NOP) for 50% duty cycle
 NOP
-NOP
-NOP
-NOP
 
 ; [0x5]: Drive Pin 0 LOW (Clock Falling Edge)
 SET0 0

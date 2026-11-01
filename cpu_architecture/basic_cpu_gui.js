@@ -593,6 +593,20 @@ function तरंगरूप_कीलनम्() {
     let सूचकांक = 0;
     let भारित_संख्या = 0;
 
+    // कूर्दन सारणी विन्यास विश्लेषणम् (Parse JUMP_TABLE configurations from assembly comments)
+    for (let इ = 0; इ < पंक्तयः.length; इ++) {
+      const पंक्ति = पंक्तयः[इ].trim();
+      const मेल = पंक्ति.match(/JUMP_TABLE\[(\d+)\]\s*=\s*(0x[0-9a-fA-F]+|\d+)/i);
+      if (मेल) {
+        const सारणी_क्रमांक = parseInt(मेल[1], 10);
+        const लक्ष्य_स्थान = parseInt(मेल[2], मेल[2].toLowerCase().startsWith('0x') ? 16 : 10);
+        if (सारणी_क्रमांक >= 0 && सारणी_क्रमांक < 16 && !isNaN(लक्ष्य_स्थान)) {
+          कूर्दन_सारणी_दत्त[सारणी_क्रमांक] = लक्ष्य_स्थान & 0x0F;
+          लॉग_योजनम्(`Configuration: JUMP_TABLE[${सारणी_क्रमांक}] = 0x${(लक्ष्य_स्थान & 0x0F).toString(16).toUpperCase()}`);
+        }
+      }
+    }
+
     for (let इ = 0; इ < पंक्तयः.length && सूचकांक < 16; इ++) {
       let पंक्ति = पंक्तयः[इ].trim();
       if (!पंक्ति || पंक्ति.startsWith(';') || पंक्ति.startsWith('//')) {
@@ -1014,6 +1028,10 @@ function तरंगरूप_कीलनम्() {
               लोड_मान = 0;
               लॉग_योजनम्(`LOAD: Read TIMER_L (0x7/R7) [0] (Timer already 0, no stall).`);
             }
+          } else if (नि.पता === 0xC) {
+            // Address 0xC: Read JMP_TABLE[0] / SHARED_3
+            लोड_मान = कूर्दन_सारणी_दत्त[0] & 0x0F;
+            लॉग_योजनम्(`LOAD: Read JUMP_TABLE[0] / Register[0xC] (0x${लोड_मान.toString(16).toUpperCase()}) into ACC/R0`);
           } else {
             if (नि.पता >= 0 && नि.पता < 8) {
               लोड_मान = पंजिका_दत्त[नि.पता] & 0x0F;
@@ -1049,6 +1067,11 @@ function तरंगरूप_कीलनम्() {
             समयगणक_पंजिका = संग्रह_मान;
             पंजिका_दत्त[7] = संग्रह_मान;
             लॉग_योजनम्(`STORE: Initialized Hardware Timer (R7/0x7) to ${संग्रह_मान} cycles.`);
+          } else if (नि.पता === 0xC) {
+            // Address 0xC: Memory-Mapped JMP_TABLE[0] / SHARED_3 Register
+            कूर्दन_सारणी_दत्त[0] = संग्रह_मान & 0x0F;
+            आंकड़ा_स्मृति_दत्त[0xC] = संग्रह_मान;
+            लॉग_योजनम्(`STORE: Configured JUMP_TABLE[0] / Register[0xC] to target address 0x${(संग्रह_मान & 0x0F).toString(16).toUpperCase()}`);
           } else {
             आंकड़ा_स्मृति_दत्त[नि.पता] = संग्रह_मान;
             if (नि.पता === 1) {

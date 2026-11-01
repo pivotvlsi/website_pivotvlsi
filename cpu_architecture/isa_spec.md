@@ -34,7 +34,7 @@ We now have **8 registers** mapped out of the 16 available slots. Every data reg
 | `0x3` | **R3** | Scratch Register. |
 | `0xA` | **SHARED_1** | Memory Mapped. Shared register across all 4 CPUs. |
 | `0xB` | **SHARED_2** | Memory Mapped. Shared register across all 4 CPUs. |
-| `0xC` | **SHARED_3** | Memory Mapped. Shared register across all 4 CPUs. |
+| `0xC` | **SHARED_3 / JMP_TABLE** | Memory Mapped. Shared register across all 4 CPUs / Runtime configurable `JUMP_TABLE[0]` branch target. |
 | `0xD` | **R6** | Scratch Register. |
 | `0xE` | **R7** | Scratch Register. |
 | `0xF` | **PIN_DIR** | Pin Direction Register (1 = Output, 0 = Input). **Read:** Returns `{pin_state, pin_dir}`. |
