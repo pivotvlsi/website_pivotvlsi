@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIVOT VLSI | Elevating your career in VLSI</title>
+  <meta name="description"
+    content="Interactive 4-Bit CPU Processor Architecture GUI Simulator with 4 Data Registers, Instruction Memory, and ALU (ADD, AND, OR, NOT, XOR, SHL, SHR).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="basic_cpu_gui.css">
+</head>
+
+<body>
+
+  <!-- शीर्षपट्टिका (Header) -->
+  <header class="शीर्षपट्टिका">
+    <div class="शीर्षपट्टिका-शीर्षक">
+      <div class="प्रतीक-चिह्न">CPU</div>
+      <div>
+        <h1>PIVOT VLSI</h1>
+        <div class="उपशीर्षक">Elevating your career in VLSI</div>
+      </div>
+    </div>
+
+    <div class="नियन्त्रण-पट्टिका">
+      <div class="संकेतक-चिप">
+        <span class="बिन्दु-द्युति"></span>
+        <span id="घटिका-स्थिति">CLOCK: READY</span>
+      </div>
+      <div
+        style="display: flex; align-items: center; gap: 0.35rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 20px; padding: 0.25rem 0.6rem;">
+        <span style="font-size: 0.75rem; color: #a5b4fc; font-weight: 600;">⏱ Period / Freq:</span>
+        <input type="number" id="घटिका-काल-निवेश" value="1" min="0.001" step="any" oninput="घटिका_काल_परिवर्तनम्()"
+          placeholder="Value"
+          style="width: 55px; background: rgba(0, 0, 0, 0.4); color: #fff; border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 6px; padding: 2px 5px; font-size: 0.75rem; font-family: 'Fira Code', monospace; outline: none; text-align: center;">
+        <select id="घटिका-इकाई-चयन" onchange="घटिका_काल_परिवर्तनम्()"
+          style="background: rgba(17, 24, 39, 0.9); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 6px; font-size: 0.75rem; outline: none; cursor: pointer; font-family: 'Fira Code', monospace; padding: 2px 4px;">
+          <option value="s" selected>s (Sec)</option>
+          <option value="ms">ms</option>
+          <option value="us">µs</option>
+          <option value="ns">ns</option>
+          <option value="KHz">KHz</option>
+          <option value="MHz">MHz</option>
+        </select>
+      </div>
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="पद-चालन-कुञ्जी" onclick="पद_चालनम्()">
+        ▶ STEP (एकपदम्)
+      </button>
+      <button class="क्रिया-कुञ्जी" id="स्वचालित-चालन-कुञ्जी" onclick="स्वचालित_चालनम्()">
+        ⚡ AUTO RUN
+      </button>
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" id="पुनःस्थापन-कुञ्जी" onclick="यन्त्र_पुनःस्थापनम्()">
+        ↺ RESET
+      </button>
+    </div>
+  </header>
+
+  <!-- मुख्य मंच (Main Workspace Grid) -->
+  <main class="मुख्य-मंच">
+
+    <!-- स्तम्भ १: निर्देश स्मृति (Instruction Memory) -->
+    <section class="फलक" id="स्मृति-फलक">
+      <div class="फलक-शीर्ष">
+        <div class="फलक-शीर्षक">
+          <span>📜 Instruction Memory</span>
+        </div>
+        <span class="फलक-शीर्षक-संकेत" id="स्मृति-आकार-संकेत">16 Words (8-bit)</span>
+      </div>
+
+      <div class="बटन-समूह" style="gap: 0.5rem; flex-wrap: wrap;">
+        <label class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;" id="संचिका-आयात-लेबल">
+          📁 Import Assembly (.asm/.txt)
+          <input type="file" id="संचिका-भारक-निवेश" accept=".txt,.asm" style="display: none;"
+            onchange="संचिकातः_कार्यक्रम_भारणम्(event)">
+        </label>
+        <button class="क्रिया-कुञ्जी" id="निर्देश-सत्यापन-कुञ्जी" onclick="निर्देश_स्मृति_सत्यापनम्()" title="Validate syntax, opcodes and operands of all instructions">
+          ✔️ Validate Instructions
+        </button>
+        <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" onclick="स्मृति_स्वच्छीकरणम्()">
+          🗑️ Clear Programs
+        </button>
+      </div>
+
+      <!-- निर्देश सत्यापन फलक (Validation Status Banner) -->
+      <div id="सत्यापन-फलक" style="display: none; padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 0.75rem; font-family: 'Fira Code', monospace; line-height: 1.4; margin-bottom: 0.5rem;">
+      </div>
+
+      <!-- निर्देश सूची -->
+      <div class="स्मृति-सूची" id="स्मृति-सूची-पात्र">
+        <!-- JS से गतिशील रूप से भरी जाएगी -->
+      </div>
+    </section>
+
+    <!-- स्तम्भ २: केन्द्रीय प्रक्रमक मंच एवं अंकगणितीय तर्क इकाई (ALU Engine) -->
+    <section class="केन्द्र-मंच">
+
+      <!-- विशेष प्रयोजन पंजिका (Program Counter, Clock Cycle & Instruction Register) -->
+      <div class="विशेष-पंजिका-ग्रिड" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="लघु-पंजिका">
+          <span class="लघु-पंजिका-नाम">Program Counter (PC)</span>
+          <span class="लघु-पंजिका-मान" id="गणक-मान">0x0 (0)</span>
+        </div>
+        <div class="लघु-पंजिका">
+          <span class="लघु-पंजिका-नाम">Running Cycle</span>
+          <span class="लघु-पंजिका-मान" id="घटिका-चक्र-मान" style="color: #fbbf24;">T1</span>
+        </div>
+        <div class="लघु-पंजिका">
+          <span class="लघु-पंजिका-नाम">Instruction Reg (IR)</span>
+          <span class="लघु-पंजिका-मान" id="निर्देश-पंजिका-मान">0x00 [NOP]</span>
+        </div>
+      </div>
+
+      <!-- वास्तुकला आरेख व ALU -->
+      <div class="वास्तुकला-पटल">
+        <div class="फलक-शीर्षक" style="width: 100%; justify-content: space-between;">
+          <span>⚡ Arithmetic Logic Unit (ALU)</span>
+          <span class="फलक-शीर्षक-संकेत">4-Bit Core</span>
+        </div>
+
+        <div class="ध्वजा-पट्टिका">
+          <div class="ध्वजा-कोष्ठक" title="Zero Flag: Result is 0">
+            <span class="ध्वजा-दीपक" id="शून्य-ध्वजा-दीपक"></span>
+            <span>ZF (Zero)</span>
+          </div>
+          <div class="ध्वजा-कोष्ठक" title="Carry Flag: Arithmetic overflow or Shift carry">
+            <span class="ध्वजा-दीपक" id="हासिल-ध्वजा-दीपक"></span>
+            <span>CF (Carry)</span>
+          </div>
+        </div>
+
+        <!-- ALU Display Component -->
+        <div class="गणना-यन्त्र-आवरण">
+          <div class="गणना-निवेश-संकेतक">
+            <div class="गणना-निवेश-क" id="संकेतक-निवेश-क">Operand A: R0 = 0000 (0)</div>
+            <div class="गणना-निवेश-ख" id="संकेतक-निवेश-ख">Operand B: R1 = 0000 (0)</div>
+          </div>
+
+          <div class="गणना-यन्त्र-पिण्ड" id="गणना-यन्त्र-पिण्ड">
+            <div class="गणना-यन्त्र-शीर्षक">ALU</div>
+            <div class="गणना-यन्त्र-संक्रिया-पाठ" id="संक्रिया-पाठ">ADD (A + B)</div>
+          </div>
+
+          <div class="गणना-निर्गम-संकेतक" id="संकेतक-निर्गम">
+            Result Output: 0000 (0)
+          </div>
+        </div>
+
+        <!-- तात्कालिक निर्देश निष्पादन पट्टिका (Instant Instruction Execution Bar) -->
+        <div style="width: 100%; margin-top: 1.5rem; background: rgba(0, 0, 0, 0.35); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.35); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+          <div style="font-size: 0.85rem; font-weight: 600; color: #38bdf8; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>⚡ Instant Instruction Execution (ALU & Live CPU)</span>
+            <span style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ);">Direct Live Execution</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" id="तात्कालिक-निर्देश-निवेश" placeholder="e.g. ADD, SUB, LOADI #5, SET1 2, MOV R2, R0"
+              style="flex: 1; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 0.45rem 0.75rem; color: #f8fafc; font-family: 'Fira Code', monospace; font-size: 0.82rem; outline: none;"
+              onkeydown="if(event.key==='Enter') तात्कालिक_निर्देश_निष्पादनम्()">
+            <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="तात्कालिक-निष्पादन-कुञ्जी" onclick="तात्कालिक_निर्देश_निष्पादनम्()"
+              style="padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 700; white-space: nowrap; border-radius: 8px;">
+              ⚡ Run Now
+            </button>
+          </div>
+          <div id="तात्कालिक-निर्देश-प्रतिक्रिया" style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ); margin-top: 0.4rem; font-family: 'Fira Code', monospace; min-height: 1.1rem;">
+            Tip: Type any valid instruction or click an ALU button below to execute instantly on live CPU.
+          </div>
+        </div>
+
+        <!-- Manual Interactive ALU Mode / Quick Test -->
+        <div style="width: 100%; margin-top: 1.25rem;">
+          <div
+            style="font-size: 0.85rem; color: var(--वर्ण-उपपाठ); margin-bottom: 0.6rem; display: flex; justify-content: space-between;">
+            <span>Instant ALU Buttons (Click to Execute on ACC & B):</span>
+            <span style="color: #38bdf8;">ALU Live Mode</span>
+          </div>
+
+          <div class="संक्रिया-ग्रिड">
+            <button class="संक्रिया-कुञ्जी सक्रिय" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ADD')">ADD (+)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SUB')">SUB (-)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('AND')">AND (&)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('OR')">OR (|)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('NOT')">NOT (~)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('XOR')">XOR (^)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SHL')">SHL (&lt;&lt;)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SHR')">SHR (&gt;&gt;)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CLR')">CLR (0)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- प्रचालन विवरण एवं संसूचना (Execution Log Console) -->
+      <div class="फलक" style="flex: 1;">
+        <div class="फलक-शीर्ष">
+          <div class="फलक-शीर्षक">
+            <span>💻 Execution Trace & Bus Activity</span>
+          </div>
+          <button class="क्रिया-कुञ्जी" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;"
+            onclick="लॉग_स्वच्छीकरणम्()">Clear</button>
+        </div>
+        <div class="विवरण-फलक" id="विवरण-लॉग-पात्र">
+          <div class="विवरण-प्रविष्टि">
+            <span class="विवरण-समय">[00:00:00]</span>
+            <span class="विवरण-संदेश">Processor initialized. Ready to execute instructions.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- स्तम्भ ३: ४ दत्त पंजिका (4 Data Registers: R0, R1, R2, R3) -->
+    <section class="फलक" id="पंजिका-फलक">
+      <div class="फलक-शीर्ष">
+        <div class="फलक-शीर्षक">
+          <span>🗄️ 4 Data Registers</span>
+        </div>
+        <span class="फलक-शीर्षक-संकेत">4-Bit (0 - 15)</span>
+      </div>
+
+      <div style="font-size: 0.8rem; color: var(--वर्ण-उपपाठ);">
+        Click individual bits (3-2-1-0) to toggle values directly in real-time.
+      </div>
+
+      <div class="पंजिका-जाल">
+        <!-- R0 पंजिका -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-०">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register 0</span>
+              <span class="पंजिका-टैग">R0 / Acc</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-०">0</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-०">
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(0, 3)" title="Bit 3 (MSB: 8)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(0, 2)" title="Bit 2 (4)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(0, 1)" title="Bit 1 (2)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(0, 0)" title="Bit 0 (LSB: 1)">0</div>
+          </div>
+        </div>
+
+        <!-- R1 पंजिका -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-१">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register 1</span>
+              <span class="पंजिका-टैग">R1 / Reg B</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-१">0</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-१">
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(1, 3)" title="Bit 3 (MSB: 8)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(1, 2)" title="Bit 2 (4)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(1, 1)" title="Bit 1 (2)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(1, 0)" title="Bit 0 (LSB: 1)">0</div>
+          </div>
+        </div>
+
+        <!-- R2 पंजिका -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-२">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register 2</span>
+              <span class="पंजिका-टैग">R2 / Aux</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-२">0</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-२">
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(2, 3)" title="Bit 3 (MSB: 8)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(2, 2)" title="Bit 2 (4)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(2, 1)" title="Bit 1 (2)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(2, 0)" title="Bit 0 (LSB: 1)">0</div>
+          </div>
+        </div>
+
+        <!-- R3 पंजिका -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-३">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register 3</span>
+              <span class="पंजिका-टैग">R3 / Scratch</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-३">0</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-३">
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(3, 3)" title="Bit 3 (MSB: 8)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(3, 2)" title="Bit 2 (4)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(3, 1)" title="Bit 1 (2)">0</div>
+            <div class="बिट-गोलक" onclick="बिट_परिवर्तनम्(3, 0)" title="Bit 0 (LSB: 1)">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- पिन पंजिका फलक (Dedicated GPIO Read/Write & Enable Registers) -->
+      <div
+        style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.6rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.6rem;">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #38bdf8;">⚡ GPIO Registers (Read, Write &
+          Enable)</span>
+
+        <!-- PIN_IN: Read Register (R4 / 0x6 Read) -->
+        <div class="पंजिका-कार्ड" style="border-color: rgba(56, 189, 248, 0.35);" id="पंजिका-कार्ड-४">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>PIN_IN / R4 (Read)</span>
+              <span class="पंजिका-टैग">R4 / 0x6 [R]</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पिन-पठन-दशमलव">0</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-४">
+            <div class="बिट-गोलक" id="पिन-पठन-बिट-३" onclick="पिन_पंजिका_बिट_परिवर्तनम्('पठन', 3)" title="Bit 3">0</div>
+            <div class="बिट-गोलक" id="पिन-पठन-बिट-२" onclick="पिन_पंजिका_बिट_परिवर्तनम्('पठन', 2)" title="Bit 2">0</div>
+            <div class="बिट-गोलक" id="पिन-पठन-बिट-१" onclick="पिन_पंजिका_बिट_परिवर्तनम्('पठन', 1)" title="Bit 1">0</div>
+            <div class="बिट-गोलक" id="पिन-पठन-बिट-०" onclick="पिन_पंजिका_बिट_परिवर्तनम्('पठन', 0)" title="Bit 0">0</div>
+          </div>
+        </div>
+
+        <!-- PIN_EN: Enable Register (R5 / 0xF Direction / Output Enable) -->
+        <div class="पंजिका-कार्ड" style="border-color: rgba(245, 158, 11, 0.35);" id="पंजिका-कार्ड-५">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>PIN_EN / R5 (Enable / Dir)</span>
+              <span class="पंजिका-टैग">R5 / 0xF [OE]</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पिन-सक्रियता-दशमलव">15</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-५">
+            <div class="बिट-गोलक सक्रिय-बिट" id="पिन-सक्रियता-बिट-३" onclick="पिन_पंजिका_बिट_परिवर्तनम्('सक्रियता', 3)"
+              title="Enable Bit 3 (1 = Driven Output, 0 = High-Z / Input)">1</div>
+            <div class="बिट-गोलक सक्रिय-बिट" id="पिन-सक्रियता-बिट-२" onclick="पिन_पंजिका_बिट_परिवर्तनम्('सक्रियता', 2)"
+              title="Enable Bit 2">1</div>
+            <div class="बिट-गोलक सक्रिय-बिट" id="पिन-सक्रियता-बिट-१" onclick="पिन_पंजिका_बिट_परिवर्तनम्('सक्रियता', 1)"
+              title="Enable Bit 1">1</div>
+            <div class="बिट-गोलक सक्रिय-बिट" id="पिन-सक्रियता-बिट-०" onclick="पिन_पंजिका_बिट_परिवर्तनम्('सक्रियता', 0)"
+              title="Enable Bit 0">1</div>
+          </div>
+        </div>
+
+        <!-- PIN_OUT: Write Register (R6 / 0x6 Write) -->
+        <div class="पंजिका-कार्ड" style="border-color: rgba(99, 102, 241, 0.35);" id="पंजिका-कार्ड-६">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>PIN_OUT / R6 (Write)</span>
+              <span class="पंजिका-टैग">R6 / 0x6 [W]</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पिन-लेखन-दशमलव">0</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-६">
+            <div class="बिट-गोलक" id="पिन-लेखन-बिट-३" onclick="पिन_पंजिका_बिट_परिवर्तनम्('लेखन', 3)" title="Bit 3">0
+            </div>
+            <div class="बिट-गोलक" id="पिन-लेखन-बिट-२" onclick="पिन_पंजिका_बिट_परिवर्तनम्('लेखन', 2)" title="Bit 2">0
+            </div>
+            <div class="बिट-गोलक" id="पिन-लेखन-बिट-१" onclick="पिन_पंजिका_बिट_परिवर्तनम्('लेखन', 1)" title="Bit 1">0
+            </div>
+            <div class="बिट-गोलक" id="पिन-लेखन-बिट-०" onclick="पिन_पंजिका_बिट_परिवर्तनम्('लेखन', 0)" title="Bit 0">0
+            </div>
+          </div>
+        </div>
+
+        <!-- TIMER: Hardware Countdown Timer Register (R7 / 0x7) -->
+        <div class="पंजिका-कार्ड" style="border-color: rgba(239, 68, 68, 0.35);" id="पंजिका-कार्ड-७">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>TIMER / R7 (Stall on Read)</span>
+              <span class="पंजिका-टैग">R7 / 0x7</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-७">0</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-७">
+            <div class="बिट-गोलक" onclick="समयगणक_परिवर्तनम्(3)" title="Bit 3 (8)">0</div>
+            <div class="बिट-गोलक" onclick="समयगणक_परिवर्तनम्(2)" title="Bit 2 (4)">0</div>
+            <div class="बिट-गोलक" onclick="समयगणक_परिवर्तनम्(1)" title="Bit 1 (2)">0</div>
+            <div class="बिट-गोलक" onclick="समयगणक_परिवर्तनम्(0)" title="Bit 0 (1)">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- द्रुत पंजिका स्थापन (Quick Value Set) -->
+      <div class="निर्देश-संपादक" style="margin-top: auto;">
+        <span style="font-size: 0.8rem; font-weight: 600; color: #a5b4fc;">⚡ Direct Register Value Set</span>
+        <div class=" निवेश-पंक्ति">
+          <select id="द्रुत-पंजिका-चयन">
+            <option value="0">R0 (ACC)</option>
+            <option value="1">R1 (B)</option>
+            <option value="2">R2</option>
+            <option value="3">R3</option>
+            <option value="4">R4 (PIN_IN)</option>
+            <option value="5">R5 (PIN_EN)</option>
+            <option value="6">R6 (PIN_OUT)</option>
+            <option value="7">R7 (TIMER)</option>
+          </select>
+          <input type="number" id="द्रुत-मूल्य-निवेश" min="0" max="15" value="7" placeholder="Value (0-15)">
+          <button class="क्रिया-कुञ्जी" onclick="द्रुत_पंजिका_स्थापनम्()">Load</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- अधःस्थित पूर्ण-विस्तार पिन एवं तरंगरूप फलक (Bottom Full-Width GPIO & Waveform Panel) -->
+  <section class="अधः-पिन-फलक" id="अधः-पिन-फलक">
+    <div class="फलक-शीर्ष" style="margin-bottom: 0.75rem;">
+      <div class="फलक-शीर्षक" style="gap: 0.75rem;">
+        <span style="font-size: 1.05rem;">🔌 Physical GPIO Pins & Digital Waveform Logic Analyzer</span>
+        <span class="फलक-शीर्षक-संकेत" id="पिन-दिशानिर्देश-पाठ">Dir: 0x00 | State: 0x00</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <!-- Add Clock Period Button -->
+        <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="घटिका-चक्र-योजन-कुञ्जी" onclick="घटिका_चक्र_योजनम्()"
+          style="padding: 0.25rem 0.75rem; font-size: 0.78rem;">
+          ➕ Add Clock Period (+T)
+        </button>
+
+        <!-- Waveform Toggle Lock Button -->
+        <button class="क्रिया-कुञ्जी" id="तरंगरूप-कील-कुञ्जी" onclick="तरंगरूप_कीलनम्()"
+          style="padding: 0.25rem 0.75rem; font-size: 0.78rem;">
+          🔓 Unlocked (Click Waveform to Toggle)
+        </button>
+
+        <!-- Waveform Clear Button -->
+        <button class="क्रिया-कुञ्जी" style="padding: 0.25rem 0.75rem; font-size: 0.78rem;"
+          onclick="तरंगरूप_स्वच्छीकरणम्()">
+          🗑️ Clear Trace
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 GPIO Pin Switches (Pins 3 down to 0) -->
+    <div
+      style="display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 0.75rem; background: rgba(0, 0, 0, 0.25); padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);">
+      <span style="font-size: 0.8rem; font-weight: 600; color: #a5b4fc;">4-Bit GPIO Data Pins (3-0):</span>
+      <div class="पंजिका-बिट-पट्टिका" id="पिन-पट्टिका" style="gap: 0.8rem;">
+        <div class="बिट-गोलक" id="पिन-गोलक-३" onclick="पिन_परिवर्तनम्(3)" title="Pin 3 (Click to toggle)">0</div>
+        <div class="बिट-गोलक" id="पिन-गोलक-२" onclick="पिन_परिवर्तनम्(2)" title="Pin 2 (Click to toggle)">0</div>
+        <div class="बिट-गोलक" id="पिन-गोलक-१" onclick="पिन_परिवर्तनम्(1)" title="Pin 1 (Click to toggle)">0</div>
+        <div class="बिट-गोलक" id="पिन-गोलक-०" onclick="पिन_परिवर्तनम्(0)" title="Pin 0 (Click to toggle)">0</div>
+      </div>
+      <span style="font-size: 0.75rem; color: var(--वर्ण-उपपाठ); margin-left: auto;">
+        Tip: Click any pin bubble OR click on its waveform lane below to toggle pin HIGH/LOW.
+      </span>
+    </div>
+
+    <!-- तरंगरूप दर्शक (Digital Waveform Canvas Full-Width with Horizontal Scroll) -->
+    <div style="display: flex; align-items: stretch; gap: 0.6rem;">
+      <div
+        style="flex: 1; background: #030712; border: 1px solid rgba(99, 102, 241, 0.35); border-radius: 10px; overflow-x: auto; overflow-y: hidden; padding: 6px; box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);"
+        id="तरंगरूप-पात्र">
+        <canvas id="तरंगरूप-चित्रफलक" width="1600" height="220"
+          style="height: 220px; display: block; cursor: pointer;"></canvas>
+      </div>
+
+      <!-- Add Clock Period Button at the end of timeline -->
+      <button class="क्रिया-कुञ्जी" id="तरंगरूप-अन्त्य-योजन-कुञ्जी" onclick="घटिका_चक्र_योजनम्()"
+        title="Add Clock Period (+1 Cycle)"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.75rem 1.1rem; background: rgba(99, 102, 241, 0.15); border: 1px dashed rgba(99, 102, 241, 0.5); border-radius: 10px; cursor: pointer; color: #a5b4fc; font-weight: 700; font-size: 0.85rem; min-width: 60px;">
+        <span style="font-size: 1.5rem; line-height: 1;">➕</span>
+        <span>+T</span>
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    <span>Interactive 4-Bit CPU Processor Architecture GUI Simulator</span>
+    <span>•</span>
+    <span>Architecture with 4 Data Registers, 16-word Memory, ALU with ADD, AND, OR, NOT, XOR, SHL, SHR</span>
+  </footer>
+
+  <!-- प्रक्रमक कार्यप्रणाली लिपि (External Processor Javascript) -->
+  <script src="basic_cpu_gui.js"></script>
+</body>
+
+</html>
