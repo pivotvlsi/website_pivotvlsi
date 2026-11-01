@@ -512,6 +512,121 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.addEventListener('resize', रेखाङ्कनंकुरु);
     
+    // तरंगरूप दत्तांश प्रयुक्ति (Apply Waveform Object to Diagram)
+    function तरंगरूप_दत्तांश_प्रयुक्ति(पार्सित_दत्तांश) {
+        if (!पार्सित_दत्तांश) return false;
+        const सङ्केत_सूची = पार्सित_दत्तांश.सङ्केताः || पार्सित_दत्तांश.संकेताः || पार्सित_दत्तांश.signals;
+        if (!सङ्केत_सूची || !Array.isArray(सङ्केत_सूची)) {
+            return false;
+        }
+
+        // Set waveform length
+        if (पार्सित_दत्तांश.तरंगदैर्घ्यम्) {
+            const आयाम_निवेश = document.getElementById('तरङ्गायामः');
+            if (आयाम_निवेश) {
+                आयाम_निवेश.value = Math.max(10, parseInt(पार्सित_दत्तांश.तरंगदैर्घ्यम्));
+            }
+        }
+
+        // Set time scale value and unit if present
+        if (पार्सित_दत्तांश.समयमापकः) {
+            const मापक_चयन = document.getElementById('समयमापकः');
+            if (मापक_चयन) मापक_चयन.value = String(पार्सित_दत्तांश.समयमापकः);
+        }
+        if (पार्सित_दत्तांश.समयैकम्) {
+            const इकाई_चयन = document.getElementById('समयैकम्');
+            const तरंग_इकाई_चयन = document.getElementById('तरङ्गायामैकम्');
+            if (इकाई_चयन) इकाई_चयन.value = पार्सित_दत्तांश.समयैकम्;
+            if (तरंग_इकाई_चयन) तरंग_इकाई_चयन.value = पार्सित_दत्तांश.समयैकम्;
+        }
+
+        // Clear existing signals and load imported signals
+        सङ्केतदत्तांशः.length = 0;
+        सङ्केत_सूची.forEach((संकेत, सूचक) => {
+            सङ्केतदत्तांशः.push({
+                id: संकेत.id || ('sig_' + सूचक),
+                name: संकेत.name,
+                width: संकेत.width || 1,
+                radix: संकेत.radix || 'binary',
+                pieces: JSON.parse(JSON.stringify(संकेत.pieces || []))
+            });
+        });
+
+        // Adjust zoom to fit comfortably in view
+        const दक्षिणखण्डः = document.getElementById('दक्षिणखण्डः');
+        const आयामः = parseInt(document.getElementById('तरङ्गायामः').value) || 10;
+        if (दक्षिणखण्डः && दक्षिणखण्डः.clientWidth > 0) {
+            प्रतिमानम् = Math.max(20, Math.min(120, (दक्षिणखण्डः.clientWidth - 40) / आयामः));
+        }
+
+        रेखाङ्कनंकुरु();
+        सङ्केतपुनःलेखनम्();
+        return true;
+    }
+
+    // संचिकातः तरंग भारणम् (Load .tr Waveform from File on User's Computer)
+    function संचिकातः_तरंग_भारणम्(घटना) {
+        const संचिका = घटना.target.files && घटना.target.files[0];
+        if (!संचिका) return;
+
+        const पठक = new FileReader();
+        पठक.onload = function(ई) {
+            try {
+                const पाठ = ई.target.result;
+                const पार्सित_दत्तांश = JSON.parse(पाठ);
+                const परिणाम = तरंगरूप_दत्तांश_प्रयुक्ति(पार्सित_दत्तांश);
+                if (!परिणाम) {
+                    alert('Invalid .tr file format. Could not parse waveform signals.');
+                }
+            } catch (दोष) {
+                console.error(दोष);
+                alert('Error reading .tr file: ' + दोष.message);
+            }
+            // Reset input so same file can be selected again
+            घटना.target.value = '';
+        };
+        पठक.readAsText(संचिका);
+    }
+    window.संचिकातः_तरंग_भारणम् = संचिकातः_तरंग_भारणम्;
+
+    // सीपीयू तरंगरूप भारक कार्यप्रणाली (Load Waveform Data Exported from CPU Simulator)
+    function सीपीयू_तरंगरूप_भारणम्(दर्शयतु_सूचना = true) {
+        try {
+            const संगृहीत_दत्तांश = localStorage.getItem('पिभट्_तरंगदत्तांशः');
+            if (!संगृहीत_दत्तांश) {
+                if (दर्शयतु_सूचना) {
+                    alert('No CPU waveform trace found in storage. Please generate or run a program in CPU Simulator and click "Show in Timing Diagram".');
+                }
+                return false;
+            }
+
+            const पार्सित_दत्तांश = JSON.parse(संगृहीत_दत्तांश);
+            return तरंगरूप_दत्तांश_प्रयुक्ति(पार्सित_दत्तांश);
+        } catch (दोषः) {
+            console.error('Error loading CPU waveform:', दोषः);
+            return false;
+        }
+    }
+
+    // Connect Load CPU Button
+    const सीपीयू_कुञ्जी = document.getElementById('सीपीयू-तरंग-भारकः');
+    if (सीपीयू_कुञ्जी) {
+        सीपीयू_कुञ्जी.addEventListener('click', () => {
+            सीपीयू_तरंगरूप_भारणम्(true);
+        });
+    }
+
+    // Auto-load if URL contains query parameter ?load_cpu_waveform=1 or if trace was just exported
+    const यूआरएल_प्राचलाः = new URLSearchParams(window.location.search);
+    if (यूआरएल_प्राचलाः.get('load_cpu_waveform') === '1') {
+        सीपीयू_तरंगरूप_भारणम्(false);
+    }
+
+    // Expose for testing
+    window.सीपीयू_तरंगरूप_भारणम् = सीपीयू_तरंगरूप_भारणम्;
+    window.सङ्केतदत्तांशः = सङ्केतदत्तांशः;
+    window.तरंगरूप_दत्तांश_प्रयुक्ति = तरंगरूप_दत्तांश_प्रयुक्ति;
+
     // Initial draw
     रेखाङ्कनंकुरु();
 });

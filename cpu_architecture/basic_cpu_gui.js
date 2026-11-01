@@ -71,6 +71,12 @@ window.addEventListener('DOMContentLoaded', () => {
   window.स्मृति_दत्त = स्मृति_दत्त;
   window.पंजिका_दत्त = पंजिका_दत्त;
   window.तात्कालिक_निर्देश_निष्पादनम् = तात्कालिक_निर्देश_निष्पादनम्;
+  window.तरंगरूप_छवि_अवरोहणम् = तरंगरूप_छवि_अवरोहणम्;
+  window.समयचित्रे_तरंगरूप_प्रेषणम् = समयचित्रे_तरंगरूप_प्रेषणम्;
+  window.तरंगरूप_संचिका_अवरोहणम् = तरंगरूप_संचिका_अवरोहणम्;
+  window.तरंगरूप_दत्तांश_निर्माणम् = तरंगरूप_दत्तांश_निर्माणम्;
+  window.पिन_परिवर्तनम् = पिन_परिवर्तनम्;
+  window.घटिका_चक्र_योजनम् = घटिका_चक्र_योजनम्;
   स्मृति_दत्त = new Array(16).fill(null);
   कार्यक्रम_गणक = 0;
   निर्देश_पंजिका = null;
@@ -152,33 +158,18 @@ function घटिका_काल_परिवर्तनम्() {
   if (isNaN(संख्या) || संख्या <= 0) return;
 
   const चयनित_इकाई = इकाई.value;
-  let काल_सेकंड = 1.0;
+  let काल_सेकंड = 0.001;
   let आवृत्ति_हर्ट्ज_पाठ = "";
 
-  if (चयनित_इकाई === 's') {
-    काल_सेकंड = संख्या;
-    const आवृत्ति = 1 / काल_सेकंड;
-    आवृत्ति_हर्ट्ज_पाठ = आवृत्ति >= 1000 ? `${(आवृत्ति / 1000).toFixed(2)} KHz` : `${आवृत्ति.toFixed(2)} Hz`;
-  } else if (चयनित_इकाई === 'ms') {
-    काल_सेकंड = संख्या / 1e3;
-    const आवृत्ति = 1 / काल_सेकंड;
-    आवृत्ति_हर्ट्ज_पाठ = आवृत्ति >= 1000 ? `${(आवृत्ति / 1000).toFixed(2)} KHz` : `${आवृत्ति.toFixed(2)} Hz`;
-  } else if (चयनित_इकाई === 'us') {
-    काल_सेकंड = संख्या / 1e6;
-    const आवृत्ति = 1 / काल_सेकंड;
-    आवृत्ति_हर्ट्ज_पाठ = `${(आवृत्ति / 1e6).toFixed(2)} MHz`;
-  } else if (चयनित_इकाई === 'ns') {
-    काल_सेकंड = संख्या / 1e9;
-    const आवृत्ति = 1 / काल_सेकंड;
-    आवृत्ति_हर्ट्ज_पाठ = `${(आवृत्ति / 1e6).toFixed(2)} MHz`;
-  } else if (चयनित_इकाई === 'KHz') {
-    const आवृत्ति = संख्या * 1e3;
-    काल_सेकंड = 1 / आवृत्ति;
-    आवृत्ति_हर्ट्ज_पाठ = `${संख्या} KHz`;
-  } else if (चयनित_इकाई === 'MHz') {
+  if (चयनित_इकाई === 'MHz') {
     const आवृत्ति = संख्या * 1e6;
     काल_सेकंड = 1 / आवृत्ति;
     आवृत्ति_हर्ट्ज_पाठ = `${संख्या} MHz`;
+  } else {
+    // Default: KHz
+    const आवृत्ति = संख्या * 1e3;
+    काल_सेकंड = 1 / आवृत्ति;
+    आवृत्ति_हर्ट्ज_पाठ = `${संख्या} KHz`;
   }
 
   // Minimum browser timer clamped to 15ms for smooth visual animation without freezing UI
@@ -1516,6 +1507,124 @@ function तरंगरूप_कीलनम्() {
         पात्र.scrollLeft = पात्र.scrollWidth;
       }
     }, 50);
+  }
+
+  // तरंगरूप छवि अवरोहणम् (Save Waveform trace as PNG image directly to computer)
+  function तरंगरूप_छवि_अवरोहणम्() {
+    const चित्रफलक = document.getElementById('तरंगरूप-चित्रफलक');
+    if (!चित्रफलक) return;
+
+    const सम्बन्ध = document.createElement('a');
+    सम्बन्ध.download = 'cpu_waveform_trace.png';
+    सम्बन्ध.href = चित्रफलक.toDataURL('image/png');
+    document.body.appendChild(सम्बन्ध);
+    सम्बन्ध.click();
+    document.body.removeChild(सम्बन्ध);
+    लॉग_योजनम्("Waveform trace saved as PNG image to computer.");
+  }
+
+  // तरंगरूप दत्तांश निर्माणम् (Build Timing Diagram compatible waveform data object)
+  function तरंगरूप_दत्तांश_निर्माणम्() {
+    const कुल_नमूना_संख्या = Math.max(10, तरंगरूप_इतिहास.length);
+    const संकेत_तालिका = [];
+
+    // 1. CLK Signal: width 1, square wave toggling each half-cycle
+    const घटी_खण्ड = [];
+    for (let चक्र = 0; चक्र < कुल_नमूना_संख्या; चक्र++) {
+      घटी_खण्ड.push({ start: चक्र, end: चक्र + 0.5, value: '1' });
+      घटी_खण्ड.push({ start: चक्र + 0.5, end: चक्र + 1, value: '0' });
+    }
+    संकेत_तालिका.push({
+      id: 'sig_clk',
+      name: 'CLK',
+      width: 1,
+      radix: 'binary',
+      pieces: घटी_खण्ड
+    });
+
+    // 2. 4-bit GPIO Data Bus: width 4, radix hex
+    const बस_खण्ड = [];
+    for (let चक्र = 0; चक्र < कुल_नमूना_संख्या; चक्र++) {
+      const मूल्य = (चक्र < तरंगरूप_इतिहास.length) ? (तरंगरूप_इतिहास[चक्र] & 0x0F) : 0;
+      const षोडश_मूल्य = '0x' + मूल्य.toString(16).toUpperCase();
+      const पूर्व_खण्ड = बस_खण्ड.length > 0 ? बस_खण्ड[बस_खण्ड.length - 1] : null;
+      if (पूर्व_खण्ड && पूर्व_खण्ड.value === षोडश_मूल्य) {
+        पूर्व_खण्ड.end = चक्र + 1;
+      } else {
+        बस_खण्ड.push({ start: चक्र, end: चक्र + 1, value: षोडश_मूल्य });
+      }
+    }
+    संकेत_तालिका.push({
+      id: 'sig_gpio_bus',
+      name: 'GPIO[3:0]',
+      width: 4,
+      radix: 'hex',
+      pieces: बस_खण्ड
+    });
+
+    // 3. Individual GPIO Pins: PIN 3 down to PIN 0
+    for (let पिन = 3; पिन >= 0; पिन--) {
+      const पिन_खण्ड = [];
+      for (let चक्र = 0; चक्र < कुल_नमूना_संख्या; चक्र++) {
+        const नमूना = (चक्र < तरंगरूप_इतिहास.length) ? तरंगरूप_इतिहास[चक्र] : 0;
+        const बिट = String((नमूना >> पिन) & 1);
+        const पूर्व_खण्ड = पिन_खण्ड.length > 0 ? पिन_खण्ड[पिन_खण्ड.length - 1] : null;
+        if (पूर्व_खण्ड && पूर्व_खण्ड.value === बिट) {
+          पूर्व_खण्ड.end = चक्र + 1;
+        } else {
+          पिन_खण्ड.push({ start: चक्र, end: चक्र + 1, value: बिट });
+        }
+      }
+      संकेत_तालिका.push({
+        id: 'sig_pin_' + पिन,
+        name: 'PIN_' + पिन,
+        width: 1,
+        radix: 'binary',
+        pieces: पिन_खण्ड
+      });
+    }
+
+    return {
+      स्रोत: 'cpu_architecture',
+      तरंगदैर्घ्यम्: कुल_नमूना_संख्या,
+      समयमापकः: 1,
+      समयैकम्: 'ns',
+      सङ्केताः: संकेत_तालिका,
+      संकेताः: संकेत_तालिका,
+      signals: संकेत_तालिका,
+      कालचिह्नम्: Date.now()
+    };
+  }
+
+  // तरंगरूप संचिका अवरोहणम् (Save Waveform Trace directly to .tr file on user computer)
+  function तरंगरूप_संचिका_अवरोहणम्() {
+    const दत्तांश = तरंगरूप_दत्तांश_निर्माणम्();
+    const सूत्र = JSON.stringify(दत्तांश, null, 2);
+    const पिण्ड = new Blob([सूत्र], { type: 'application/json' });
+    const सम्बन्ध = document.createElement('a');
+    सम्बन्ध.download = 'cpu_waveform_trace.tr';
+    सम्बन्ध.href = URL.createObjectURL(पिण्ड);
+    document.body.appendChild(सम्बन्ध);
+    सम्बन्ध.click();
+    document.body.removeChild(सम्बन्ध);
+    URL.revokeObjectURL(सम्बन्ध.href);
+    लॉग_योजनम्(`Waveform trace exported and saved as cpu_waveform_trace.tr file.`);
+  }
+
+  // समयचित्रे तरंगरूप प्रेषणम् (Save CPU waveform data to storage and open in Timing Diagram Tool)
+  function समयचित्रे_तरंगरूप_प्रेषणम्() {
+    const प्रेषित_तरंग_दत्तांश = तरंगरूप_दत्तांश_निर्माणम्();
+    const कुल_नमूना_संख्या = प्रेषित_तरंग_दत्तांश.तरंगदैर्घ्यम्;
+
+    try {
+      localStorage.setItem('पिभट्_तरंगदत्तांशः', JSON.stringify(प्रेषित_तरंग_दत्तांश));
+      लॉग_योजनम्(`Waveform (${कुल_नमूना_संख्या} cycles, 6 signals) stored. Opening Timing Diagram Tool...`);
+    } catch (दोष) {
+      console.error(दोष);
+    }
+
+    // Open Timing Diagram in new tab
+    window.open('../timing_diagram/timing_diagram.html?load_cpu_waveform=1', '_blank');
   }
 
   // तरंगरूप स्वच्छीकरणम् (Clear waveform history)

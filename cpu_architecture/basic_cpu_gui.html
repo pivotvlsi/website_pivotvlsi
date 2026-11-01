@@ -40,11 +40,7 @@
           style="width: 55px; background: rgba(0, 0, 0, 0.4); color: #fff; border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 6px; padding: 2px 5px; font-size: 0.75rem; font-family: 'Fira Code', monospace; outline: none; text-align: center;">
         <select id="घटिका-इकाई-चयन" onchange="घटिका_काल_परिवर्तनम्()"
           style="background: rgba(17, 24, 39, 0.9); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 6px; font-size: 0.75rem; outline: none; cursor: pointer; font-family: 'Fira Code', monospace; padding: 2px 4px;">
-          <option value="s" selected>s (Sec)</option>
-          <option value="ms">ms</option>
-          <option value="us">µs</option>
-          <option value="ns">ns</option>
-          <option value="KHz">KHz</option>
+          <option value="KHz" selected>KHz</option>
           <option value="MHz">MHz</option>
         </select>
       </div>
@@ -407,6 +403,27 @@
       </div>
 
       <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <!-- Save Waveform Image Directly to Computer -->
+        <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="तरंगरूप-छवि-अवरोहण-कुञ्जी" onclick="तरंगरूप_छवि_अवरोहणम्()"
+          title="Save waveform image (.png) to your computer"
+          style="padding: 0.25rem 0.75rem; font-size: 0.78rem;">
+          📷 Save PNG
+        </button>
+
+        <!-- Save .tr Waveform Trace File to Computer -->
+        <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="तरंगरूप-संचिका-अवरोहण-कुञ्जी" onclick="तरंगरूप_संचिका_अवरोहणम्()"
+          title="Save waveform trace as .tr file to your computer"
+          style="padding: 0.25rem 0.75rem; font-size: 0.78rem; background: #0284c7; border-color: #38bdf8;">
+          💾 Save .tr
+        </button>
+
+        <!-- Show Waveform in Timing Diagram Tool -->
+        <button class="क्रिया-कुञ्जी" id="समयचित्र-तरंगरूप-प्रेषण-कुञ्जी" onclick="समयचित्रे_तरंगरूप_प्रेषणम्()"
+          title="Open this waveform in Timing Diagram Tool"
+          style="padding: 0.25rem 0.75rem; font-size: 0.78rem;">
+          📊 Show in Timing Diagram
+        </button>
+
         <!-- Add Clock Period Button -->
         <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="घटिका-चक्र-योजन-कुञ्जी" onclick="घटिका_चक्र_योजनम्()"
           style="padding: 0.25rem 0.75rem; font-size: 0.78rem;">

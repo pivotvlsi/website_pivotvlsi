@@ -67,6 +67,11 @@
                 </select>
             </div>
             <button class="उपकरणकीलः" id="सङ्केतयोजना" title="Add Signal"><i class="fas fa-plus"></i> Add Signal</button>
+            <!-- Load .tr Waveform File Input & Button -->
+            <label class="उपकरणकीलः" id="संचिका-तरंग-भारकः" title="Load .tr Waveform Trace file from your computer" style="background: rgba(14, 165, 233, 0.2); border: 1px solid #0ea5e9; color: #38bdf8; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                <i class="fas fa-file-code"></i> Load .tr
+                <input type="file" id="तरंग-संचिका-निवेशः" accept=".tr,.json" style="display: none;" onchange="संचिकातः_तरंग_भारणम्(event)">
+            </label>
             <div class="विस्तारसमूहः">
                 <input type="number" class="समयमापकः" id="तरङ्गायामः" value="10" title="Waveform Length Value">
                 <select class="समयैकम्" id="तरङ्गायामैकम्" title="Waveform Length Unit">
