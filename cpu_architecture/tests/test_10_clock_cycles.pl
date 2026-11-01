@@ -42,8 +42,8 @@ if (!$driver) {
 $driver->get($file_url);
 sleep(1);
 
-subtest "१० क्लॉक साइकल असेंबली सत्यापन (Validation and Stepping of 10 Cycles)" => sub {
-    my $asm_file = File::Spec->catfile($root_dir, 'clock_generator.asm');
+subtest "१० क्लॉक साइकल असेंबली सत्यापन (Validation and Stepping of 10 Highs & 10 Lows via STORE/LOAD)" => sub {
+    my $asm_file = File::Spec->catfile($root_dir, 'clock_burst_10cycles.asm');
     open my $fh, '<:utf8', $asm_file or die "Cannot open $asm_file: $!";
     my $asm_code = do { local $/; <$fh> };
     close $fh;
@@ -54,7 +54,7 @@ subtest "१० क्लॉक साइकल असेंबली सत्�
         return परिणाम.सफलम्;
     });
 
-    ok($valid, "clock_generator.asm passes assembly validation");
+    ok($valid, "clock_burst_10cycles.asm passes assembly validation");
 
     # Load assembly into CPU
     $driver->execute_script(qq{
@@ -62,19 +62,18 @@ subtest "१० क्लॉक साइकल असेंबली सत्�
         window.कूर्दन_सारणी_दत्त[0] = 3;
     });
 
-    my $step_btn = $driver->find_element('पद-चालन-कुञ्जी', 'id');
     my $pin0_elem = $driver->find_element('पिन-गोलक-०', 'id');
 
     # Execute initialization:
     # 0x0: LOADIB #1
-    $step_btn->click();
+    $driver->execute_script('window.पद_चालनम्();');
     # 0x1: LOADI #10
-    $step_btn->click();
-    # 0x2: MOV R2, R0 -> R2 = 10
-    $step_btn->click();
+    $driver->execute_script('window.पद_चालनम्();');
+    # 0x2: STORE 0x2 -> R2 = 10
+    $driver->execute_script('window.पद_चालनम्();');
 
     my $r2_val = $driver->execute_script('return window.पंजिका_दत्त[2];');
-    is($r2_val, 10, "Loop counter R2 initialized to 10");
+    is($r2_val, 10, "Loop counter R2 initialized to 10 via STORE 0x2");
 
     # Step through 10 iterations of the clock pulse generator
     my $high_count = 0;
@@ -82,27 +81,27 @@ subtest "१० क्लॉक साइकल असेंबली सत्�
 
     for (my $it = 1; $it <= 10; $it++) {
         # 0x3: SET1 0 -> Pin 0 = 1
-        $step_btn->click();
+        $driver->execute_script('window.पद_चालनम्();');
         $high_count++ if $pin0_elem->get_text() eq '1';
 
         # 0x4: NOP
-        $step_btn->click();
+        $driver->execute_script('window.पद_चालनम्();');
 
         # 0x5: SET0 0 -> Pin 0 = 0
-        $step_btn->click();
+        $driver->execute_script('window.पद_चालनम्();');
         $low_count++ if $pin0_elem->get_text() eq '0';
 
-        # 0x6: MOV R0, R2
-        $step_btn->click();
+        # 0x6: LOAD 0x2 (Restore R2 counter to ACC)
+        $driver->execute_script('window.पद_चालनम्();');
 
         # 0x7: SUB (ACC = ACC - B)
-        $step_btn->click();
+        $driver->execute_script('window.पद_चालनम्();');
 
-        # 0x8: MOV R2, R0 (Save decremented count)
-        $step_btn->click();
+        # 0x8: STORE 0x2 (Save decremented count to R2)
+        $driver->execute_script('window.पद_चालनम्();');
 
         # 0x9: JMPNZ 0
-        $step_btn->click();
+        $driver->execute_script('window.पद_चालनम्();');
     }
 
     is($high_count, 10, "Pin 0 rose HIGH exactly 10 times");
@@ -113,7 +112,7 @@ subtest "१० क्लॉक साइकल असेंबली सत्�
     is($final_r2, 0, "Counter R2 reached 0 after 10 full clock periods");
 
     # After loop terminates, PC advances to 0xA (HALT)
-    $step_btn->click();
+    $driver->execute_script('window.पद_चालनम्();');
     my $pc = $driver->find_element('गणक-मान', 'id')->get_text();
     like($pc, qr/0xA/i, "Execution arrived and stopped at HALT (PC = 0xA)");
 };

@@ -45,7 +45,7 @@
         </select>
       </div>
       <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="पद-चालन-कुञ्जी" onclick="पद_चालनम्()">
-        ▶ STEP (एकपदम्)
+        ▶ STEP
       </button>
       <button class="क्रिया-कुञ्जी" id="स्वचालित-चालन-कुञ्जी" onclick="स्वचालित_चालनम्()">
         ⚡ AUTO RUN
@@ -153,7 +153,7 @@
             <span style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ);">Direct Live Execution</span>
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <input type="text" id="तात्कालिक-निर्देश-निवेश" placeholder="e.g. ADD, SUB, LOADI #5, SET1 2, MOV R2, R0"
+            <input type="text" id="तात्कालिक-निर्देश-निवेश" placeholder="e.g. ADD, SUB, LOADI #5, SET1 2, STORE 0x2"
               style="flex: 1; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 0.45rem 0.75rem; color: #f8fafc; font-family: 'Fira Code', monospace; font-size: 0.82rem; outline: none;"
               onkeydown="if(event.key==='Enter') तात्कालिक_निर्देश_निष्पादनम्()">
             <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="तात्कालिक-निष्पादन-कुञ्जी" onclick="तात्कालिक_निर्देश_निष्पादनम्()"

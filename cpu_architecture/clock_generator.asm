@@ -15,7 +15,7 @@ LOADIB #1
 LOADI #10
 
 ; [0x2]: Initialize loop counter R2 = 10
-MOV R2, R0
+STORE 0x2
 
 ; --- LOOP BODY (STARTS AT ADDRESS 0x3) ---
 ; [0x3]: Drive Pin 0 HIGH (Clock Rising Edge)
@@ -28,13 +28,13 @@ NOP
 SET0 0
 
 ; [0x6]: Copy counter R2 into ACC
-MOV R0, R2
+LOAD 0x2
 
 ; [0x7]: Decrement counter: ACC = ACC - B (R2 - 1)
 SUB
 
 ; [0x8]: Store decremented value back into R2
-MOV R2, R0
+STORE 0x2
 
 ; [0x9]: If counter != 0 (Zero Flag == 0), repeat loop via JUMP_TABLE[0] -> 0x3
 JMPNZ 0

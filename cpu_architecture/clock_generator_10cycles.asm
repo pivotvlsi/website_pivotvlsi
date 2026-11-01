@@ -15,7 +15,7 @@ LOADIB #1
 LOADI #10
 
 ; [0x2]: Initialize loop counter R2 = 10
-MOV R2, R0
+STORE 0x2
 
 ; --- LOOP BODY (START: ADDRESS 0x3) ---
 ; [0x3]: Drive Pin 0 HIGH (Rising Edge)
@@ -28,13 +28,13 @@ NOP
 SET0 0
 
 ; [0x6]: Copy counter R2 into ACC for decrement
-MOV R0, R2
+LOAD 0x2
 
 ; [0x7]: Decrement counter: ACC = ACC - B (ACC = R2 - 1)
 SUB
 
 ; [0x8]: Save updated count back to R2
-MOV R2, R0
+STORE 0x2
 
 ; [0x9]: If ACC != 0 (ZF == 0), jump back to 0x3 via JUMP_TABLE[0]
 ; JUMP_TABLE[0] must be configured to target 0x3
