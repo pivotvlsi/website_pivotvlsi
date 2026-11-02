@@ -30,9 +30,9 @@ if (!$चालक) {
 plan tests => 8;
 
 # 1. Test CPU Architecture Page Waveform Export & File Structure
-my $सीपियू_मार्ग = -f '../cpu_architecture/basic_cpu_gui.html'
-    ? abs_path('../cpu_architecture/basic_cpu_gui.html')
-    : abs_path('cpu_architecture/basic_cpu_gui.html');
+my $सीपियू_मार्ग = -f 'basic_cpu_gui.html'
+    ? abs_path('basic_cpu_gui.html')
+    : abs_path('workshop/cpu_architecture/basic_cpu_gui.html');
 $सीपियू_मार्ग =~ s{\\}{/}g;
 $चालक->get("file:///$सीपियू_मार्ग");
 

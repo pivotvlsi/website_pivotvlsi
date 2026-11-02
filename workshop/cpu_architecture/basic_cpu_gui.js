@@ -1700,7 +1700,7 @@ function तरंगरूप_कीलनम्() {
     }
 
     // Open Timing Diagram in new tab
-    window.open('../timing_diagram/timing_diagram.html?load_cpu_waveform=1', '_blank');
+    window.open('../../timing_diagram/timing_diagram.html?load_cpu_waveform=1', '_blank');
   }
 
   // तरंगरूप स्वच्छीकरणम् (Clear waveform history)
