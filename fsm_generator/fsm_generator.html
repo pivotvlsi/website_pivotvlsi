@@ -296,22 +296,25 @@
     </div>
   </div>
 
-  <!-- संक्रमण-संवाद-पात्रम् (Modal for adding transition on click) -->
+  <!-- संक्रमण-संवाद-पात्रम् (Modal for adding/editing transition on click) -->
   <div class="संवादपात्रम्" id="संक्रमण-संवाद-पात्रम्" style="display: none;">
     <div class="संवादपेटिका" id="संक्रमण-संवाद-पेटिका">
       <div class="संवादशीर्षकम्">
-        <span><i class="fas fa-arrow-right"></i> Add Transition: <span id="संवाद-स्रोतः-लेबलम्"></span> &rarr; <span id="संवाद-गन्तव्य-लेबलम्"></span></span>
+        <span><i class="fas fa-arrow-right"></i> <span id="संवाद-संक्रमण-शीर्षक-प्रकार">Transition</span>: <span id="संवाद-स्रोतः-लेबलम्"></span> &rarr; <span id="संवाद-गन्तव्य-लेबलम्"></span></span>
         <button class="क्रियाकीलः लघुकीलः" onclick="संक्रमण_संवाद_गोपनम्()"><i class="fas fa-times"></i></button>
       </div>
       <div class="संवादशरीरम्">
-        <label class="निवेशलेबलम्" for="संवाद-शर्त-निवेशः">Condition / Input (e.g. din == 1)</label>
+        <label class="निवेशलेबलम्" for="संवाद-शर्त-निवेशः">Condition / Input (e.g. din == 1, din == 0)</label>
         <input type="text" id="संवाद-शर्त-निवेशः" class="निवेशपेटिका" value="din == 1">
-        <label class="निवेशलेबलम्" for="संवाद-निर्गम-निवेशः" style="margin-top: 10px;">Output Action (e.g. dout = 1)</label>
+        <label class="निवेशलेबलम्" for="संवाद-निर्गम-निवेशः" style="margin-top: 10px;">Output Action (e.g. dout = 1, dout = 0)</label>
         <input type="text" id="संवाद-निर्गम-निवेशः" class="निवेशपेटिका" value="dout = 0">
       </div>
       <div class="संवादपादम्">
+        <button class="क्रियाकीलः क्रियाकीलः-संकट" id="संवाद-संक्रमण-विलोपन-कीलः" onclick="संपादित_संक्रमण_विलोपनम्()" style="margin-right: auto; display: none;">
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
         <button class="क्रियाकीलः" onclick="संक्रमण_संवाद_गोपनम्()">Cancel</button>
-        <button class="क्रियाकीलः क्रियाकीलः-प्राथमिक" onclick="संक्रमण_सृजन_स्वीकारः()">Add Transition</button>
+        <button class="क्रियाकीलः क्रियाकीलः-प्राथमिक" id="संवाद-संक्रमण-स्वीकार-कीलः" onclick="संक्रमण_सृजन_स्वीकारः()">Save Transition</button>
       </div>
     </div>
   </div>
