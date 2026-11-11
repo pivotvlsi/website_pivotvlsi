@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FSM Generator &amp; State Diagram Studio | PIVOT VLSI</title>
+  <meta name="description"
+    content="Interactive Finite State Machine (FSM) Designer, Visual Diagram Generator, and Synthesizable Verilog / SystemVerilog HDL Code Generator for digital VLSI design.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="fsm_generator.css">
+</head>
+
+<body>
+
+  <!-- शीर्षपट्टिका (Standard Fixed Navigation Header) -->
+  <header id="शीर्षपट्टिका">
+    <div id="चिह्नपात्रम्">
+      <a href="../index.html">
+        <img src="../home_page/company_logo.png" alt="PIVOT VLSI Institute Logo" id="चिह्नम्">
+      </a>
+    </div>
+    <ul id="मार्गसञ्चारकडी">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a></li>
+      <li><a href="../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a></li>
+      <li><a href="../workshop/workshop.html">Workshops</a></li>
+      <li><a href="../about_us/about_us.html">About</a></li>
+      <li><a href="../home_page/contact.html">Contact</a></li>
+    </ul>
+  </header>
+
+  <!-- मुख्यपात्रम् (Main Workspace) -->
+  <main class="मुख्यपात्रम्" id="मुख्यपात्रम्">
+
+    <section class="शीर्षकविभागः">
+      <h1 class="मुख्यशीर्षकम्">Finite State Machine (FSM) Studio</h1>
+      <p class="उपशीर्षकम्">Visual State Transition Graph &bull; Synthesizable Verilog / SystemVerilog HDL Generator</p>
+    </section>
+
+    <div class="विन्यासफलकम्">
+
+      <!-- Left Column: FSM Configuration & Transition Matrix -->
+      <section class="फलकम्" id="विन्यास-फलकम्">
+        <div class="फलकशीर्षकम्">
+          <span><i class="fas fa-sliders-h"></i> FSM Configuration</span>
+          <button class="क्रियाकीलः लघुकीलः" onclick="पूर्वनिर्धारित_भारणम्()" title="Load sample sequence detector">Sample FSM</button>
+        </div>
+
+        <div class="पंक्तिविन्यासः">
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="यन्त्र-नाम-निवेशः">Module Name</label>
+            <input type="text" id="यन्त्र-नाम-निवेशः" class="निवेशपेटिका" value="seq_detector_101">
+          </div>
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="प्रकार-चयनम्">FSM Type</label>
+            <select id="प्रकार-चयनम्" class="चयनपेटिका" onchange="संहिता_उत्पादनम्()">
+              <option value="Mealy">Mealy Machine</option>
+              <option value="Moore" selected>Moore Machine</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="पंक्तिविन्यासः">
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="कूटलेखन-चयनम्">State Encoding</label>
+            <select id="कूटलेखन-चयनम्" class="चयनपेटिका" onchange="संहिता_उत्पादनम्()">
+              <option value="Binary" selected>Binary (Compact)</option>
+              <option value="One-Hot">One-Hot (High-Speed FPGA)</option>
+              <option value="Gray">Gray Code (Low-Glitch)</option>
+            </select>
+          </div>
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="घटिका-नाम-निवेशः">Clock / Reset</label>
+            <input type="text" id="घटिका-नाम-निवेशः" class="निवेशपेटिका" value="clk, rst_n">
+          </div>
+        </div>
+
+        <!-- States Definition -->
+        <div class="निवेशसमूहः">
+          <label class="निवेशलेबलम्" for="स्थिति-सूची-निवेशः">States (Comma separated, First is Reset state)</label>
+          <input type="text" id="स्थिति-सूची-निवेशः" class="निवेशपेटिका" value="S_IDLE, S_1, S_10, S_101" onchange="स्थितयः_नवीकरणम्()">
+        </div>
+
+        <!-- Add Transition Form -->
+        <div class="फलकशीर्षकम्" style="font-size: 1rem; margin-top: 5px;">
+          <span><i class="fas fa-project-diagram"></i> Add State Transition</span>
+        </div>
+
+        <div class="पंक्तिविन्यासः">
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="वर्तमान-स्थिति-चयनम्">From State</label>
+            <select id="वर्तमान-स्थिति-चयनम्" class="चयनपेटिका"></select>
+          </div>
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="परवर्ती-स्थिति-चयनम्">To State</label>
+            <select id="परवर्ती-स्थिति-चयनम्" class="चयनपेटिका"></select>
+          </div>
+        </div>
+
+        <div class="पंक्तिविन्यासः">
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="शर्त-निवेशः">Condition / Input</label>
+            <input type="text" id="शर्त-निवेशः" class="निवेशपेटिका" placeholder="in == 1" value="din == 1">
+          </div>
+          <div class="निवेशसमूहः">
+            <label class="निवेशलेबलम्" for="निर्गम-निवेशः">Output Action</label>
+            <input type="text" id="निर्गम-निवेशः" class="निवेशपेटिका" placeholder="dout = 1" value="dout = 0">
+          </div>
+        </div>
+
+        <button class="क्रियाकीलः क्रियाकीलः-प्राथमिक" onclick="संक्रमण_योजनम्()" id="संक्रमण-योजन-कीलः">
+          <i class="fas fa-plus"></i> Add Transition
+        </button>
+
+        <!-- Transition Table -->
+        <div class="सारणीपात्रम्">
+          <table class="संक्रमणसारणी" id="संक्रमण-सारणी">
+            <thead>
+              <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Condition</th>
+                <th>Output</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="संक्रमण-सारणी-शरीरम्">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="क्रियाकीलसमूहः">
+          <button class="क्रियाकीलः क्रियाकीलः-संकट" onclick="सर्व_स्वच्छीकरणम्()">
+            <i class="fas fa-trash-alt"></i> Clear All
+          </button>
+          <button class="क्रियाकीलः" onclick="संक्रमण_निर्यातम्()">
+            <i class="fas fa-download"></i> Export JSON
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Column: Visual Graph & HDL Verilog Output -->
+      <section class="फलकम्" id="प्रदर्शन-फलकम्">
+        <div class="टैबपट्टिका">
+          <button class="टैबकीलः सक्रिय" onclick="टैब_परिवर्तनम्('रेखाचित्र')" id="टैब-रेखाचित्र-कीलः">
+            <i class="fas fa-project-diagram"></i> State Diagram
+          </button>
+          <button class="टैबकीलः" onclick="टैब_परिवर्तनम्('संहिता')" id="टैब-संहिता-कीलः">
+            <i class="fas fa-code"></i> Verilog / SystemVerilog HDL
+          </button>
+        </div>
+
+        <!-- Tab 1: State Diagram Canvas -->
+        <div class="प्रदर्शनखण्डः सक्रिय" id="प्रदर्शन-रेखाचित्र-खण्डः">
+          <!-- उपकरणपट्टिका (Canvas Interactive Toolbar) -->
+          <div class="उपकरणपट्टिका" id="उपकरण-पट्टिका">
+            <button class="उपकरणकीलः सक्रिय" id="साधन-चयन-कीलः" onclick="साधन_परिवर्तनम्('चयन')" title="Select &amp; Move States">
+              <i class="fas fa-mouse-pointer"></i> Select &amp; Move
+            </button>
+            <button class="उपकरणकीलः" id="साधन-नोड-कीलः" onclick="साधन_परिवर्तनम्('नोड')" title="Click anywhere on canvas to create a state">
+              <i class="fas fa-plus-circle"></i> Add State (Click Canvas)
+            </button>
+            <button class="उपकरणकीलः" id="साधन-संक्रमण-कीलः" onclick="साधन_परिवर्तनम्('संक्रमण')" title="Click source state then target state to connect">
+              <i class="fas fa-arrow-right"></i> Add Transition (Click 2 States)
+            </button>
+            <button class="उपकरणकीलः" id="साधन-विलोपन-कीलः" onclick="साधन_परिवर्तनम्('विलोपन')" title="Click state or transition to remove">
+              <i class="fas fa-trash-alt"></i> Delete
+            </button>
+            <button class="उपकरणकीलः" id="उपकरण-स्वयंविन्यास-कीलः" onclick="स्थान_स्वयंविन्यासः()" title="Auto-arrange states evenly in circular layout">
+              <i class="fas fa-sync-alt"></i> Auto Layout
+            </button>
+            <button class="उपकरणकीलः" id="संहिता-दर्शन-कीलः" onclick="टैब_परिवर्तनम्('संहिता')" title="View complete generated Verilog HDL code" style="margin-left: auto; background: rgba(2, 132, 199, 0.2); border-color: var(--वर्ण-प्राथमिक); color: var(--वर्ण-आभा);">
+              <i class="fas fa-code"></i> View Full Verilog HDL
+            </button>
+          </div>
+
+          <!-- उपकरणसंकेतः (Interactive Mode Status & Instruction) -->
+          <div class="उपकरणसंकेतः" id="साधन-संकेतः">
+            <i class="fas fa-lightbulb"></i> Drag circles to rearrange states. Double-click canvas to quickly create a state.
+          </div>
+
+          <canvas id="रेखाचित्र-फलकम्" width="800" height="480"></canvas>
+          <div style="font-size: 0.8rem; color: var(--वर्ण-उपपाठ); margin-top: 8px; display: flex; justify-content: space-between;">
+            <span><i class="fas fa-info-circle"></i> Click any tool above or double-click canvas to build state machine interactively.</span>
+            <span id="स्थिति-गणना-संकेतः">States: 4 &bull; Transitions: 0</span>
+          </div>
+
+          <!-- लघु-संहिता-प्रदर्शनम् (Auto-generated Verilog live preview block directly below diagram) -->
+          <div class="लघुसंहितापात्रम्" id="लघु-संहिता-प्रदर्शनम्">
+            <div class="लघुसंहिताशीर्षकम्">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span><i class="fas fa-microchip"></i> Verilog HDL</span>
+                <div class="प्ररूपपट्टिका">
+                  <button class="प्ररूपकीलः सक्रिय" id="लघु-प्ररूप-डिजाइन-कीलः" onclick="संहिता_प्ररूप_परिवर्तनम्('डिजाइन')">Module (.v)</button>
+                  <button class="प्ररूपकीलः" id="लघु-प्ररूप-परीक्षणपीठ-कीलः" onclick="संहिता_प्ररूप_परिवर्तनम्('परीक्षणपीठ')">Testbench (.v)</button>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="क्रियाकीलः लघुकीलः" onclick="संहिता_प्रतिलिपि()"><i class="fas fa-copy"></i> Copy</button>
+                <button class="क्रियाकीलः लघुकीलः" onclick="संहिता_अवरोहणम्()"><i class="fas fa-download"></i> Download</button>
+                <button class="क्रियाकीलः लघुकीलः क्रियाकीलः-प्राथमिक" onclick="टैब_परिवर्तनम्('संहिता')"><i class="fas fa-expand-alt"></i> Full View</button>
+              </div>
+            </div>
+            <textarea class="लघुसंहितासामग्री" id="लघु-संहिता-पाठः" readonly spellcheck="false"></textarea>
+          </div>
+        </div>
+
+        <!-- Tab 2: Synthesizable Verilog HDL Code -->
+        <div class="प्रदर्शनखण्डः" id="प्रदर्शन-संहिता-खण्डः">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div class="प्ररूपपट्टिका">
+              <button class="प्ररूपकीलः सक्रिय" id="प्ररूप-डिजाइन-कीलः" onclick="संहिता_प्ररूप_परिवर्तनम्('डिजाइन')">FSM Design Module (.v)</button>
+              <button class="प्ररूपकीलः" id="प्ररूप-परीक्षणपीठ-कीलः" onclick="संहिता_प्ररूप_परिवर्तनम्('परीक्षणपीठ')">Simulation Testbench (.v)</button>
+            </div>
+          </div>
+          <textarea class="संहितापाठक्षेत्रम्" id="संहिता-पाठ-क्षेत्रम्" readonly spellcheck="false"></textarea>
+          <div class="क्रियाकीलसमूहः" style="margin-top: 10px;">
+            <button class="क्रियाकीलः क्रियाकीलः-प्राथमिक" onclick="संहिता_प्रतिलिपि()">
+              <i class="fas fa-copy"></i> Copy HDL Code
+            </button>
+            <button class="क्रियाकीलः" onclick="संहिता_अवरोहणम्()">
+              <i class="fas fa-file-download"></i> Download .v File
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- पादलेख (Standard Uniform Site Footer) -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>PIVOT VLSI</h4>
+        <p>Elevating your potential through premier educational programs and practical silicon design.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="../index.html">Home</a>
+        <a href="../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a>
+        <a href="../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a>
+        <a href="../workshop/workshop.html">Workshops</a>
+        <a href="../about_us/about_us.html">About</a>
+        <a href="../home_page/contact.html">Contact</a>
+        <a href="../sitemap.xml">Sitemap</a>
+      </div>
+      <div class="footer-section">
+        <h4>Legal &amp; Policies</h4>
+        <a href="../policies/terms_of_service.html">Terms of Service</a>
+        <a href="../policies/refund_and_cancellation_policy.html">Refund &amp; Cancellation Policy</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact Info</h4>
+        <p>Email: info@pivotvlsi.in</p>
+        <div style="margin-top: 15px; display: flex; gap: 15px;">
+          <a href="https://www.youtube.com/@PIVOT-vlsi" target="_blank" rel="noopener noreferrer" style="color: #ff0000; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="YouTube">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/pivot-vlsi/" target="_blank" rel="noopener noreferrer" style="color: #0077b5; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="https://github.com/pivotvlsi" target="_blank" rel="noopener noreferrer" style="color: #ffffff; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 PIVOT VLSI. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- स्थिति-संवाद-पात्रम् (Modal for adding state on click) -->
+  <div class="संवादपात्रम्" id="स्थिति-संवाद-पात्रम्" style="display: none;">
+    <div class="संवादपेटिका" id="स्थिति-संवाद-पेटिका">
+      <div class="संवादशीर्षकम्">
+        <span><i class="fas fa-plus-circle"></i> Add New State</span>
+        <button class="क्रियाकीलः लघुकीलः" onclick="स्थिति_संवाद_गोपनम्()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="संवादशरीरम्">
+        <label class="निवेशलेबलम्" for="संवाद-स्थिति-नाम-निवेशः">State Name (e.g. S_WAIT, S2)</label>
+        <input type="text" id="संवाद-स्थिति-नाम-निवेशः" class="निवेशपेटिका" placeholder="State Name">
+      </div>
+      <div class="संवादपादम्">
+        <button class="क्रियाकीलः" onclick="स्थिति_संवाद_गोपनम्()">Cancel</button>
+        <button class="क्रियाकीलः क्रियाकीलः-प्राथमिक" onclick="स्थिति_सृजन_स्वीकारः()">Create State</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- संक्रमण-संवाद-पात्रम् (Modal for adding transition on click) -->
+  <div class="संवादपात्रम्" id="संक्रमण-संवाद-पात्रम्" style="display: none;">
+    <div class="संवादपेटिका" id="संक्रमण-संवाद-पेटिका">
+      <div class="संवादशीर्षकम्">
+        <span><i class="fas fa-arrow-right"></i> Add Transition: <span id="संवाद-स्रोतः-लेबलम्"></span> &rarr; <span id="संवाद-गन्तव्य-लेबलम्"></span></span>
+        <button class="क्रियाकीलः लघुकीलः" onclick="संक्रमण_संवाद_गोपनम्()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="संवादशरीरम्">
+        <label class="निवेशलेबलम्" for="संवाद-शर्त-निवेशः">Condition / Input (e.g. din == 1)</label>
+        <input type="text" id="संवाद-शर्त-निवेशः" class="निवेशपेटिका" value="din == 1">
+        <label class="निवेशलेबलम्" for="संवाद-निर्गम-निवेशः" style="margin-top: 10px;">Output Action (e.g. dout = 1)</label>
+        <input type="text" id="संवाद-निर्गम-निवेशः" class="निवेशपेटिका" value="dout = 0">
+      </div>
+      <div class="संवादपादम्">
+        <button class="क्रियाकीलः" onclick="संक्रमण_संवाद_गोपनम्()">Cancel</button>
+        <button class="क्रियाकीलः क्रियाकीलः-प्राथमिक" onclick="संक्रमण_सृजन_स्वीकारः()">Add Transition</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- स्थिति-संपादन-संवाद-पात्रम् (Modal for editing state on double click) -->
+  <div class="संवादपात्रम्" id="स्थिति-संपादन-संवाद-पात्रम्" style="display: none;">
+    <div class="संवादपेटिका" id="स्थिति-संपादन-संवाद-पेटिका">
+      <div class="संवादशीर्षकम्">
+        <span><i class="fas fa-edit"></i> Edit State: <span id="संवाद-संपादन-नाम-शीर्षकम्"></span></span>
+        <button class="क्रियाकीलः लघुकीलः" onclick="स्थिति_संपादन_गोपनम्()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="संवादशरीरम्">
+        <label class="निवेशलेबलम्" for="संवाद-पुनर्नाम-निवेशः">State Name</label>
+        <input type="text" id="संवाद-पुनर्नाम-निवेशः" class="निवेशपेटिका">
+        <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="संवाद-प्रारम्भिक-जांच" style="accent-color: var(--वर्ण-प्राथमिक); width: 16px; height: 16px; cursor: pointer;">
+          <label for="संवाद-प्रारम्भिक-जांच" style="font-size: 0.85rem; color: #bae6fd; cursor: pointer;">
+            Set as Initial Reset State (rst_n target)
+          </label>
+        </div>
+      </div>
+      <div class="संवादपादम्">
+        <button class="क्रियाकीलः क्रियाकीलः-संकट" onclick="संपादित_नोड_विलोपनम्()" style="margin-right: auto;">
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
+        <button class="क्रियाकीलः" onclick="स्थिति_संपादन_गोपनम्()">Cancel</button>
+        <button class="क्रियाकीलः क्रियाकीलः-प्राथमिक" onclick="स्थिति_संपादन_स्वीकारः()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="fsm_generator.js"></script>
+</body>
+
+</html>
