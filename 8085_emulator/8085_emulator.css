@@ -1,0 +1,732 @@
+:root {
+  --पृष्ठभूमि: #0b0f19;
+  --फलक-पृष्ठभूमि: rgba(17, 24, 39, 0.78);
+  --फलक-सीमा: rgba(99, 102, 241, 0.25);
+  --वर्ण-प्राथमिक: #6366f1;
+  --वर्ण-द्वितीयक: #06b6d4;
+  --वर्ण-आभा: #ec4899;
+  --वर्ण-सफलता: #10b981;
+  --वर्ण-चेतावनी: #f59e0b;
+  --वर्ण-संकट: #ef4444;
+  --वर्ण-पाठ: #f8fafc;
+  --वर्ण-उपपाठ: #94a3b8;
+  --वर्ण-कांच: rgba(255, 255, 255, 0.04);
+  --छाया-द्युति: 0 0 25px rgba(99, 102, 241, 0.35);
+  --संक्रमण-काल: 0.25s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: radial-gradient(circle at 15% 20%, #1e1b4b 0%, var(--पृष्ठभूमि) 50%, #030712 100%);
+  color: var(--वर्ण-पाठ);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* --- शीर्षपट्टिका (Standard Fixed Navigation Header) --- */
+#शीर्षपट्टिका {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  z-index: 1000;
+  background: rgba(6, 11, 26, 0.95);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 25px;
+  box-sizing: border-box;
+}
+
+#चिह्नपात्रम् {
+  display: flex;
+  align-items: center;
+}
+
+#चिह्नपात्रम् a {
+  display: flex;
+  align-items: center;
+}
+
+#चिह्नम् {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+#चिह्नम्:hover {
+  transform: scale(2);
+  transform-origin: top left;
+}
+
+#मार्गसञ्चारकडी {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+#मार्गसञ्चारकडी a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+#मार्गसञ्चारकडी a:hover {
+  color: #38bdf8;
+  display: inline-block;
+  transform: translateY(-1px);
+}
+
+/* उपशीर्षपट्टिका (Header & Simulator Toolbar) */
+.उपशीर्षपट्टिका {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.8rem;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--फलक-सीमा);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.शीर्षपट्टिका-शीर्षक {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.प्रतीक-चिह्न {
+  width: 46px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--वर्ण-प्राथमिक), var(--वर्ण-द्वितीयक));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--छाया-द्युति);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+h1 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffffff, #cbd5e1, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+}
+
+.उपशीर्षक {
+  font-size: 0.82rem;
+  color: var(--वर्ण-उपपाठ);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.नियन्त्रण-पट्टिका {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.संकेतक-चिप {
+  padding: 0.4rem 0.9rem;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: 20px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  color: #a5b4fc;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.बिन्दु-द्युति {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--वर्ण-सफलता);
+  box-shadow: 0 0 10px var(--वर्ण-सफलता);
+}
+
+.क्रिया-कुञ्जी {
+  background: var(--वर्ण-कांच);
+  border: 1px solid var(--फलक-सीमा);
+  color: var(--वर्ण-पाठ);
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: all var(--संक्रमण-काल);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.क्रिया-कुञ्जी:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--वर्ण-प्राथमिक);
+  transform: translateY(-1px);
+}
+
+.क्रिया-कुञ्जी-प्राथमिक {
+  background: linear-gradient(135deg, var(--वर्ण-प्राथमिक), #4f46e5);
+  border: none;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.क्रिया-कुञ्जी-प्राथमिक:hover {
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+}
+
+.क्रिया-कुञ्जी-संकट {
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.क्रिया-कुञ्जी-संकट:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: var(--वर्ण-संकट);
+}
+
+/* मुख्य रचना (3 Column Workspace Layout) */
+.मुख्य-मंच {
+  display: grid;
+  grid-template-columns: 340px 1fr 380px;
+  gap: 1.5rem;
+  padding: 1.5rem 2.5rem;
+  flex: 1;
+}
+
+.फलक {
+  background: var(--फलक-पृष्ठभूमि);
+  border: 1px solid var(--फलक-सीमा);
+  border-radius: 16px;
+  padding: 1.25rem;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.फलक-शीर्ष {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.75rem;
+}
+
+.फलक-शीर्षक {
+  font-size: 1.05rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #e2e8f0;
+}
+
+.फलक-शीर्षक-संकेत {
+  font-size: 0.75rem;
+  font-family: 'Fira Code', monospace;
+  color: var(--वर्ण-द्वितीयक);
+  background: rgba(6, 182, 212, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* निर्देश स्मृति सूची */
+.स्मृति-सूची {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 280px);
+  padding-right: 0.25rem;
+}
+
+.स्मृति-पंक्ति {
+  display: grid;
+  grid-template-columns: 55px 50px 1fr;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.स्मृति-पंक्ति:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.स्मृति-पंक्ति.सक्रिय-निर्देश {
+  background: rgba(99, 102, 241, 0.18);
+  border-color: var(--वर्ण-प्राथमिक);
+  box-shadow: inset 2px 0 0 var(--वर्ण-प्राथमिक);
+}
+
+.स्मृति-पता {
+  color: var(--वर्ण-उपपाठ);
+}
+
+.स्मृति-बाइट {
+  color: #fbbf24;
+}
+
+.स्मृति-कूट {
+  color: #38bdf8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* स्तम्भ २: केन्द्र-मंच */
+.केन्द्र-मंच {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.विशेष-पंजिका-ग्रिड {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.लघु-पंजिका {
+  background: var(--फलक-पृष्ठभूमि);
+  border: 1px solid var(--फलक-सीमा);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.लघु-पंजिका-नाम {
+  font-size: 0.75rem;
+  color: var(--वर्ण-उपपाठ);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.लघु-पंजिका-मान {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  color: #e2e8f0;
+}
+
+/* वास्तुकला पटल व ALU */
+.वास्तुकला-पटल {
+  background: var(--फलक-पृष्ठभूमि);
+  border: 1px solid var(--फलक-सीमा);
+  border-radius: 16px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* ध्वजा पट्टिका (8085 Flags: S, Z, AC, P, CY) */
+.ध्वजा-पट्टिका {
+  display: flex;
+  gap: 1rem;
+  margin: 0.8rem 0 1.2rem;
+  padding: 0.4rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ध्वजा-कोष्ठक {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: var(--वर्ण-उपपाठ);
+}
+
+.ध्वजा-दीपक {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: all 0.2s;
+}
+
+.ध्वजा-दीपक.सक्रिय-ध्वजा {
+  background: var(--वर्ण-सफलता);
+  box-shadow: 0 0 10px var(--वर्ण-सफलता);
+}
+
+/* गणना यन्त्र (Visual Wedge ALU) */
+.गणना-यन्त्र-आवरण {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.गणना-निवेश-संकेतक {
+  display: flex;
+  justify-content: space-between;
+  width: 92%;
+  margin-bottom: 0.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+}
+
+.गणना-निवेश-क {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.गणना-निवेश-ख {
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.गणना-यन्त्र-पिण्ड {
+  width: 280px;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(30, 27, 75, 0.85), rgba(15, 23, 42, 0.95));
+  clip-path: polygon(0% 0%, 38% 0%, 50% 25%, 62% 0%, 100% 0%, 75% 100%, 25% 100%);
+  border: 2px solid var(--वर्ण-प्राथमिक);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35);
+  margin-bottom: 0.6rem;
+  transition: all 0.3s ease;
+}
+
+.गणना-यन्त्र-शीर्षक {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-top: 10px;
+}
+
+.गणना-यन्त्र-संक्रिया-पाठ {
+  font-size: 0.75rem;
+  font-family: 'Fira Code', monospace;
+  color: #38bdf8;
+  margin-top: 4px;
+}
+
+.गणना-निर्गम-संकेतक {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 0.3rem;
+}
+
+/* संक्रिया ग्रिड */
+.संक्रिया-ग्रिड {
+  display: grid;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.संक्रिया-कुञ्जी {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--वर्ण-पाठ);
+  padding: 0.45rem 0.5rem;
+  border-radius: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.संक्रिया-कुञ्जी:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--वर्ण-प्राथमिक);
+}
+
+.संक्रिया-कुञ्जी.सक्रिय {
+  background: var(--वर्ण-प्राथमिक);
+  border-color: var(--वर्ण-प्राथमिक);
+  color: #fff;
+}
+
+/* विवरण फलक (Execution Log Console) */
+.विवरण-फलक {
+  background: #030712;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  overflow-y: auto;
+  max-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.विवरण-प्रविष्टि {
+  display: flex;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+.विवरण-समय {
+  color: var(--वर्ण-उपपाठ);
+}
+
+.विवरण-संदेश {
+  color: #f1f5f9;
+}
+
+/* स्तम्भ ३: पंजिका फलक (8085 Data Registers) */
+.पंजिका-जाल {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 280px);
+  padding-right: 0.2rem;
+}
+
+.पंजिका-कार्ड {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: border-color 0.2s;
+}
+
+.पंजिका-कार्ड:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.पंजिका-शीर्ष-भाग {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.पंजिका-नाम {
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.पंजिका-टैग {
+  font-size: 0.68rem;
+  font-family: 'Fira Code', monospace;
+  color: var(--वर्ण-उपपाठ);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.पंजिका-दशमलव {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.पंजिका-बिट-पट्टिका {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.25rem;
+}
+
+.बिट-गोलक {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--वर्ण-उपपाठ);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.बिट-गोलक:hover {
+  border-color: var(--वर्ण-प्राथमिक);
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.बिट-गोलक.सक्रिय-बिट {
+  background: var(--वर्ण-प्राथमिक);
+  border-color: #818cf8;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+/* द्रुत पंजिका स्थापन */
+.निर्देश-संपादक {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.निवेश-पंक्ति {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.निवेश-पंक्ति select,
+.निवेश-पंक्ति input {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: 6px;
+  color: #fff;
+  padding: 0.35rem 0.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  outline: none;
+}
+
+.निवेश-पंक्ति select {
+  flex: 1;
+}
+
+/* --- Site Footer --- */
+.site-footer {
+  background: rgba(4, 7, 18, 0.98);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 50px 24px 20px;
+  margin-top: 40px;
+}
+
+.footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 35px;
+}
+
+.footer-section h4 {
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.15rem;
+}
+
+.footer-section p {
+  color: var(--वर्ण-उपपाठ);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-section a {
+  display: block;
+  color: var(--वर्ण-उपपाठ);
+  text-decoration: none;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+  color: #38bdf8;
+}
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: 35px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  #मार्गसञ्चारकडी {
+    display: none;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .उपशीर्षपट्टिका {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .मुख्य-मंच {
+    grid-template-columns: 280px 1fr 320px;
+    padding: 1rem;
+  }
+}

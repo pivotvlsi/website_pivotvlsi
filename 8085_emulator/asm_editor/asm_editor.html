@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIVOT VLSI | Assembly Code Editor & Compiler</title>
+  <meta name="description"
+    content="Online Assembly Editor and Code Validator for PIVOT-IV 4-Bit CPU Processor Architecture. Edit, validate, and save .asm programs to your computer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="asm_editor.css">
+</head>
+
+<body>
+
+  <!-- शीर्षपट्टिका (Header) -->
+  <header class="शीर्षपट्टिका">
+    <div class="शीर्षपट्टिका-शीर्षक">
+      <div class="प्रतीक-चिह्न">ASM</div>
+      <div>
+        <h1>PIVOT VLSI</h1>
+        <div class="उपशीर्षक">Assembly Code Studio &bull; PIVOT-IV Processor</div>
+      </div>
+    </div>
+
+    <!-- नियन्त्रण पट्टिका (Actions Toolbar) -->
+    <div class="नियन्त्रण-पट्टिका">
+      <!-- New File Button -->
+      <button class="क्रिया-कुञ्जी" id="नूतन-संचिका-कुञ्जी" onclick="नूतन_संचिका_निर्माणम्()" title="Create a new blank assembly file">
+        📄 New File
+      </button>
+
+      <!-- Open File from computer -->
+      <label class="क्रिया-कुञ्जी" id="संचिका-उद्घाटन-लेबल" style="cursor: pointer;">
+        📂 Open (.asm)
+        <input type="file" id="संचिका-निवेश-तत्व" accept=".asm,.txt" style="display: none;" onchange="संचिका_उद्घाटनम्(event)">
+      </label>
+
+      <!-- File Name Input -->
+      <div style="display: flex; align-items: center; gap: 0.4rem; background: rgba(0,0,0,0.3); border: 1px solid var(--फलक-सीमा); border-radius: 8px; padding: 0.25rem 0.6rem;">
+        <span style="font-size: 0.75rem; color: #a5b4fc; font-weight: 600;">File:</span>
+        <input type="text" id="संचिका-नाम-निवेश" value="clock_generator_10cycles.asm"
+          style="background: transparent; border: none; color: #f8fafc; font-family: 'Fira Code', monospace; font-size: 0.8rem; width: 200px; outline: none;">
+      </div>
+
+      <!-- Save / Download to computer -->
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="संचिका-सञ्चय-कुञ्जी" onclick="संचिका_सञ्चयम्()" title="Save assembly file to computer">
+        💾 Save to Computer
+      </button>
+
+      <!-- Validate Button -->
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-सफलता" id="कार्यक्रम-सत्यापन-कुञ्जी" onclick="कार्यक्रम_सत्यापनम्()" title="Validate opcodes and operands">
+        ✔️ Validate Code
+      </button>
+
+      <!-- Clear Editor Button -->
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" id="पाठ-स्वच्छ-कुञ्जी" onclick="पाठ_स्वच्छीकरणम्()" title="Clear editor content">
+        🗑️ Clear
+      </button>
+
+      <!-- Link to Live CPU Simulator -->
+      <a href="basic_cpu_gui.html" class="क्रिया-कुञ्जी" style="border-color: #38bdf8; color: #38bdf8;" target="_blank" title="Launch CPU Simulator">
+        ⚡ Open CPU GUI
+      </a>
+    </div>
+  </header>
+
+  <!-- मुख्य सम्पादक मंच (Main Studio Grid) -->
+  <main class="सम्पादक-मंच">
+
+    <!-- सम्पादक फलक (Editor Panel) -->
+    <section class="फलक" style="flex: 1;">
+      <div class="फलक-शीर्ष">
+        <div class="फलक-शीर्षक">
+          <span>📝 Assembly Source Editor</span>
+          <span style="font-size: 0.75rem; font-weight: normal; color: var(--वर्ण-उपपाठ);">(Case-Insensitive &bull; Comments with <code>;</code> or <code>//</code>)</span>
+        </div>
+        <span class="फलक-शीर्षक-संकेत" id="स्थिति-निर्देश-संख्या">Instructions: 0 / 16</span>
+      </div>
+
+      <!-- Code Workspace with Line Numbers -->
+      <div class="सम्पादक-पात्र">
+        <div class="पंक्ति-क्रमांक-स्तम्भ" id="पंक्ति-क्रमांक-स्तम्भ">1</div>
+        <textarea class="संहिता-पाठ-क्षेत्र" id="संहिता-पाठ-क्षेत्र" spellcheck="false" placeholder="; Write or paste PIVOT-IV assembly instructions here...&#10;LOADI #10&#10;SET1 0&#10;HALT"></textarea>
+      </div>
+
+      <!-- स्थिति पट्टी (Bottom Status Bar) -->
+      <div class="स्थिति-पट्टिका">
+        <span id="स्थिति-पंक्ति-संख्या">Lines: 1</span>
+        <span>Capacity: Max 16 Instructions</span>
+        <span>Encoding: UTF-8 (.asm / .txt)</span>
+      </div>
+
+      <!-- सत्यापन फलक (Validation Banner) -->
+      <div class="सत्यापन-फलक" id="सत्यापन-फलक"></div>
+    </section>
+
+    <!-- पार्श्व फलक: संदर्भ एवं नमूना कोड (Side Panel: Quick Reference & Templates) -->
+    <aside class="पार्श्व-फलक">
+
+      <!-- Templates Card -->
+      <div class="लघु-कार्ड">
+        <div class="लघु-कार्ड-शीर्षक">
+          <span>🚀 Starter Templates</span>
+        </div>
+        <div class="नमूना-बटन-समूह">
+          <button class="नमूना-बटन" onclick="नमूना_भारणम्('क्लॉक_१०')">
+            ⏱ <strong>10 Clock Cycles Generator</strong><br>
+            <span style="font-size: 0.7rem; color: #94a3b8;">Square wave on Pin 0 for 10 cycles</span>
+          </button>
+          <button class="नमूना-बटन" onclick="नमूना_भारणम्('अंकगणित')">
+            ⚡ <strong>ALU Math Operations</strong><br>
+            <span style="font-size: 0.7rem; color: #94a3b8;">ADD, SUB, AND, XOR, SHL, SHR</span>
+          </button>
+          <button class="नमूना-बटन" onclick="नमूना_भारणम्('पिन_नियन्त्रण')">
+            🔌 <strong>GPIO Pin Driving</strong><br>
+            <span style="font-size: 0.7rem; color: #94a3b8;">Walking Ones output on pins 0-3</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Opcodes Palette (Click to Insert) -->
+      <div class="लघु-कार्ड">
+        <div class="लघु-कार्ड-शीर्षक">
+          <span>⚡ Instruction Palette</span>
+          <span style="font-size: 0.68rem; color: var(--वर्ण-उपपाठ);">(Click to insert)</span>
+        </div>
+        <div class="ऑपकोड-सूची-ग्रिड">
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('ADD')"><span class="नाम">ADD</span><span class="द्विक">0000</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('SUB')"><span class="नाम">SUB</span><span class="द्विक">0001</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('AND')"><span class="नाम">AND</span><span class="द्विक">0010</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('XOR')"><span class="नाम">XOR</span><span class="द्विक">0011</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('SHR')"><span class="नाम">SHR</span><span class="द्विक">0100</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('SHL')"><span class="नाम">SHL</span><span class="द्विक">0101</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('NOP')"><span class="नाम">NOP</span><span class="द्विक">0110</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('LOADIB #1')"><span class="नाम">LOADIB</span><span class="द्विक">0111</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('SET0 0')"><span class="नाम">SET0</span><span class="द्विक">1000</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('SET1 0')"><span class="नाम">SET1</span><span class="द्विक">1001</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('LOADI #10')"><span class="नाम">LOADI</span><span class="द्विक">1010</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('LOAD 0x2')"><span class="नाम">LOAD</span><span class="द्विक">1011</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('STORE 0x2')"><span class="नाम">STORE</span><span class="द्विक">1100</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('JMP 0')"><span class="नाम">JMP</span><span class="द्विक">1101</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('JMPNZ 0')"><span class="नाम">JMPNZ</span><span class="द्विक">1110</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('JMPC 0')"><span class="नाम">JMPC</span><span class="द्विक">1111</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('MOV R2, R0')"><span class="नाम">MOV</span><span class="द्विक">Reg</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('HALT')"><span class="नाम">HALT</span><span class="द्विक">Stop</span></div>
+        </div>
+      </div>
+
+      <!-- Quick Register Reference -->
+      <div class="लघु-कार्ड">
+        <div class="लघु-कार्ड-शीर्षक">
+          <span>🗄️ Register Map</span>
+        </div>
+        <div style="font-size: 0.72rem; font-family: 'Fira Code', monospace; line-height: 1.6; color: #cbd5e1;">
+          <div><strong style="color: #38bdf8;">R0 (ACC):</strong> Primary Math Accumulator</div>
+          <div><strong style="color: #38bdf8;">R1 (B):</strong> Secondary Math Register</div>
+          <div><strong style="color: #a5b4fc;">R2 - R3:</strong> Loop Counters / Scratch</div>
+          <div><strong style="color: #f59e0b;">R4 (PIN_IN):</strong> Physical Pin Read (RO)</div>
+          <div><strong style="color: #f59e0b;">R5 (PIN_EN):</strong> Pin Output Enable (0xF)</div>
+          <div><strong style="color: #f59e0b;">R6 (PIN_OUT):</strong> Pin Output Latch</div>
+          <div><strong style="color: #ef4444;">R7 (TIMER):</strong> Countdown Stall Timer</div>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- पादलेख (Footer) -->
+  <footer>
+    <span>PIVOT VLSI &bull; Assembly Code Studio &bull; PIVOT-IV CPU Architecture</span>
+    <span>•</span>
+    <span>Programs saved as standard .asm files can be directly imported into the CPU Simulator</span>
+  </footer>
+
+  <!-- लिपि (Javascript Logic) -->
+  <script src="asm_editor.js"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,50 @@
+import { describe, test, expect } from 'vitest';
+import * as fc from 'fast-check';
+import { runAndGetState } from './test-utils';
+
+// RDEL (opcode 18H) is undocumented by Intel. MAME's 8085 core (src/devices/cpu/i8085/i8085.cpp) rotates DE left through
+// carry and sets the undocumented V flag to "new bit 15 XOR the new carry",
+// leaving every other flag alone.
+describe('RDEL Instruction', () => {
+    test('RDEL: rotates DE left through carry and sets V from the sign change', async () => {
+        await fc.assert(
+            fc.asyncProperty(
+                fc.integer({ min: 0x0000, max: 0xffff }),
+                fc.boolean(),
+                async (de, carryIn) => {
+                    const expected = ((de << 1) | (carryIn ? 1 : 0)) & 0xffff;
+                    const expectedCarry = (de & 0x8000) !== 0;
+
+                    const result = await runAndGetState('rdel\nhlt', {
+                        registers: { de: { high: de >> 8, low: de & 0xff } },
+                        flags: { c: carryIn },
+                    });
+
+                    const actual = (result.registers.de.high << 8) | result.registers.de.low;
+                    expect(actual).toBe(expected);
+                    expect(result.flags.c).toBe(expectedCarry);
+                    expect(result.flags.v).toBe(((expected >> 15) & 1) !== (expectedCarry ? 1 : 0));
+                },
+            ),
+            { numRuns: 40 },
+        );
+    });
+
+    test('RDEL: writes carry and V but leaves every other flag alone', async () => {
+        // The original publication lists RDEL as affecting only CY and V.
+        // Seed every preserved flag in both directions so always-setting or
+        // always-clearing any one of them is observable.
+        for (const seeded of [true, false]) {
+            const result = await runAndGetState('rdel\nhlt', {
+                registers: { de: { high: 0x40, low: 0x00 } },
+                flags: { z: seeded, s: seeded, p: seeded, ac: seeded, k: seeded },
+            });
+
+            expect(result.flags.z).toBe(seeded);
+            expect(result.flags.s).toBe(seeded);
+            expect(result.flags.p).toBe(seeded);
+            expect(result.flags.ac).toBe(seeded);
+            expect(result.flags.k).toBe(seeded);
+        }
+    });
+});

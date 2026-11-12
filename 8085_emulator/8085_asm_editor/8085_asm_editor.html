@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIVOT VLSI | Intel 8085 Assembly Code Studio & Validator</title>
+  <meta name="description"
+    content="Online Intel 8085 Assembly Code Editor, Assembler, and Syntax Validator. Edit, assemble, and export 8085 .asm programs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="8085_asm_editor.css">
+</head>
+
+<body>
+
+  <!-- शीर्षपट्टिका (Header) -->
+  <header class="शीर्षपट्टिका">
+    <div class="शीर्षपट्टिका-शीर्षक">
+      <div class="प्रतीक-चिह्न">8085</div>
+      <div>
+        <h1>PIVOT VLSI</h1>
+        <div class="उपशीर्षक">Intel 8085 Assembly Code Studio &bull; 8-Bit Architecture</div>
+      </div>
+    </div>
+
+    <!-- नियन्त्रण पट्टिका (Actions Toolbar) -->
+    <div class="नियन्त्रण-पट्टिका">
+      <!-- New File Button -->
+      <button class="क्रिया-कुञ्जी" id="नूतन-संचिका-कुञ्जी" onclick="नूतन_संचिका_निर्माणम्()" title="Create a new blank assembly file">
+        📄 New File
+      </button>
+
+      <!-- Open File from computer -->
+      <label class="क्रिया-कुञ्जी" id="संचिका-उद्घाटन-लेबल" style="cursor: pointer;">
+        📂 Open (.asm)
+        <input type="file" id="संचिका-निवेश-तत्व" accept=".asm,.txt" style="display: none;" onchange="संचिका_उद्घाटनम्(event)">
+      </label>
+
+      <!-- File Name Input -->
+      <div style="display: flex; align-items: center; gap: 0.4rem; background: rgba(0,0,0,0.3); border: 1px solid var(--फलक-सीमा); border-radius: 8px; padding: 0.25rem 0.6rem;">
+        <span style="font-size: 0.75rem; color: #a5b4fc; font-weight: 600;">File:</span>
+        <input type="text" id="संचिका-नाम-निवेश" value="program_8085.asm"
+          style="background: transparent; border: none; color: #f8fafc; font-family: 'Fira Code', monospace; font-size: 0.8rem; width: 180px; outline: none;">
+      </div>
+
+      <!-- Save / Download to computer -->
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="संचिका-सञ्चय-कुञ्जी" onclick="संचिका_सञ्चयम्()" title="Save assembly file to computer">
+        💾 Save to Computer
+      </button>
+
+      <!-- Validate Button -->
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-सफलता" id="कार्यक्रम-सत्यापन-कुञ्जी" onclick="कार्यक्रम_सत्यापनम्()" title="Validate opcodes and operands">
+        ✔️ Validate 8085 Code
+      </button>
+
+      <!-- Clear Editor Button -->
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" id="पाठ-स्वच्छ-कुञ्जी" onclick="पाठ_स्वच्छीकरणम्()" title="Clear editor content">
+        🗑️ Clear
+      </button>
+
+      <!-- Link to Live 8085 CPU Simulator -->
+      <a href="../8085_emulator.html" class="क्रिया-कुञ्जी" style="border-color: #38bdf8; color: #38bdf8; text-decoration: none;" target="_blank" title="Launch 8085 CPU Simulator">
+        ⚡ Open 8085 GUI
+      </a>
+    </div>
+  </header>
+
+  <!-- मुख्य सम्पादक मंच (Main Studio Grid) -->
+  <main class="सम्पादक-मंच">
+
+    <!-- सम्पादक फलक (Editor Panel) -->
+    <section class="फलक" style="flex: 1;">
+      <div class="फलक-शीर्ष">
+        <div class="फलक-शीर्षक">
+          <span>📝 8085 Assembly Source Editor</span>
+          <span style="font-size: 0.75rem; font-weight: normal; color: var(--वर्ण-उपपाठ);">(Case-Insensitive &bull; Comments with <code>;</code> or <code>//</code>)</span>
+        </div>
+        <span class="फलक-शीर्षक-संकेत" id="स्थिति-निर्देश-संख्या">Memory: 64KB Address Space</span>
+      </div>
+
+      <!-- Code Workspace with Line Numbers -->
+      <div class="सम्पादक-पात्र">
+        <div class="पंक्ति-क्रमांक-स्तम्भ" id="पंक्ति-क्रमांक-स्तम्भ">1</div>
+        <textarea class="संहिता-पाठ-क्षेत्र" id="संहिता-पाठ-क्षेत्र" spellcheck="false" placeholder="; Write Intel 8085 assembly instructions here...&#10;ORG 0800H&#10;MVI A, 05H&#10;MVI B, 03H&#10;ADD B&#10;HLT"></textarea>
+      </div>
+
+      <!-- स्थिति पट्टी (Bottom Status Bar) -->
+      <div class="स्थिति-पट्टिका">
+        <span id="स्थिति-पंक्ति-संख्या">Lines: 1</span>
+        <span id="स्थिति-बाइट-गणना">Size: 0 Bytes</span>
+        <span>Architecture: Intel 8085 (8-Bit Data, 16-Bit Address)</span>
+        <span>Encoding: UTF-8 (.asm / .txt)</span>
+      </div>
+
+      <!-- सत्यापन फलक (Validation Banner) -->
+      <div class="सत्यापन-फलक" id="सत्यापन-फलक"></div>
+    </section>
+
+    <!-- पार्श्व फलक: 8085 संदर्भ एवं नमूना कोड (Side Panel: Quick Reference & Templates) -->
+    <aside class="पार्श्व-फलक">
+
+      <!-- Templates Card -->
+      <div class="लघु-कार्ड">
+        <div class="लघु-कार्ड-शीर्षक">
+          <span>🚀 8085 Starter Templates</span>
+        </div>
+        <div class="नमूना-बटन-समूह">
+          <button class="नमूना-बटन" onclick="नमूना_भारणम्('अंकगणित')">
+            ⚡ <strong>8-Bit Arithmetic & Flags</strong><br>
+            <span style="font-size: 0.7rem; color: #94a3b8;">MVI, ADD, SUB, INR, DAA with flags</span>
+          </button>
+          <button class="नमूना-बटन" onclick="नमूना_भारणम्('मेमोरी_स्थानान्तरण')">
+            🗄️ <strong>Memory Transfer & 16-Bit Ptrs</strong><br>
+            <span style="font-size: 0.7rem; color: #94a3b8;">LXI H, MOV M, A, INX H array loop</span>
+          </button>
+          <button class="नमूना-बटन" onclick="नमूना_भारणम्('स्टैक_सब्रूटिन')">
+            🔄 <strong>Stack & Subroutine (CALL / RET)</strong><br>
+            <span style="font-size: 0.7rem; color: #94a3b8;">LXI SP, PUSH, POP, CALL, RET</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Opcodes Palette (Click to Insert) -->
+      <div class="लघु-कार्ड">
+        <div class="लघु-कार्ड-शीर्षक">
+          <span>⚡ 8085 Instruction Palette</span>
+          <span style="font-size: 0.68rem; color: var(--वर्ण-उपपाठ);">(Click to insert)</span>
+        </div>
+        <div class="ऑपकोड-सूची-ग्रिड">
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('MOV A, B')"><span class="नाम">MOV</span><span class="द्विक">r1, r2</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('MVI A, 05H')"><span class="नाम">MVI</span><span class="द्विक">r, d8</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('LXI H, 0850H')"><span class="नाम">LXI</span><span class="द्विक">rp, d16</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('LDA 0850H')"><span class="नाम">LDA</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('STA 0850H')"><span class="नाम">STA</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('LHLD 0850H')"><span class="नाम">LHLD</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('SHLD 0850H')"><span class="नाम">SHLD</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('ADD B')"><span class="नाम">ADD</span><span class="द्विक">A + r</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('SUB C')"><span class="नाम">SUB</span><span class="द्विक">A - r</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('INR A')"><span class="नाम">INR</span><span class="द्विक">r + 1</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('DCR B')"><span class="नाम">DCR</span><span class="द्विक">r - 1</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('INX H')"><span class="नाम">INX</span><span class="द्विक">rp + 1</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('DCX H')"><span class="नाम">DCX</span><span class="द्विक">rp - 1</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('DAD B')"><span class="नाम">DAD</span><span class="द्विक">HL + rp</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('ANA B')"><span class="नाम">ANA</span><span class="द्विक">A & r</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('ORA C')"><span class="नाम">ORA</span><span class="द्विक">A | r</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('XRA A')"><span class="नाम">XRA</span><span class="द्विक">A ^ r</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('CMP B')"><span class="नाम">CMP</span><span class="द्विक">A - r</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('JMP 0800H')"><span class="नाम">JMP</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('JNZ 0800H')"><span class="नाम">JNZ</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('JZ 0800H')"><span class="नाम">JZ</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('CALL 0900H')"><span class="नाम">CALL</span><span class="द्विक">adr</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('RET')"><span class="नाम">RET</span><span class="द्विक">stack</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('PUSH B')"><span class="नाम">PUSH</span><span class="द्विक">rp</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('POP B')"><span class="नाम">POP</span><span class="द्विक">rp</span></div>
+          <div class="ऑपकोड-टैग" onclick="ऑपकोड_प्रविष्टि('HLT')"><span class="नाम">HLT</span><span class="द्विक">Halt</span></div>
+        </div>
+      </div>
+
+      <!-- Quick 8085 Register Specification Reference -->
+      <div class="लघु-कार्ड">
+        <div class="लघु-कार्ड-शीर्षक">
+          <span>🗄️ 8085 Register Specification</span>
+        </div>
+        <div style="font-size: 0.72rem; font-family: 'Fira Code', monospace; line-height: 1.6; color: #cbd5e1;">
+          <div><strong style="color: #38bdf8;">A (Accumulator):</strong> 8-bit Primary Arithmetic & Logic register</div>
+          <div><strong style="color: #38bdf8;">B, C:</strong> 8-bit General Purpose / 16-bit <strong>BC Pair</strong></div>
+          <div><strong style="color: #38bdf8;">D, E:</strong> 8-bit General Purpose / 16-bit <strong>DE Pair</strong></div>
+          <div><strong style="color: #a78bfa;">H, L:</strong> 8-bit General Purpose / 16-bit <strong>HL Pointer</strong></div>
+          <div><strong style="color: #f59e0b;">M [HL]:</strong> Memory operand at address addressed by HL</div>
+          <div><strong style="color: #34d399;">SP:</strong> 16-bit Stack Pointer (pointing to stack top)</div>
+          <div><strong style="color: #34d399;">PC:</strong> 16-bit Program Counter (execution sequence)</div>
+          <div><strong style="color: #ec4899;">Flags (PSW):</strong> Sign (S), Zero (Z), Aux Carry (AC), Parity (P), Carry (CY)</div>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- पादलेख (Footer) -->
+  <footer>
+    <span>PIVOT VLSI &bull; Intel 8085 Assembly Code Studio &bull; 8-Bit Architecture</span>
+    <span>•</span>
+    <span>Programs saved as standard .asm files can be directly imported into the 8085 Microprocessor Simulator</span>
+  </footer>
+
+  <!-- लिपि (Javascript Logic) -->
+  <script src="8085_asm_editor.js"></script>
+</body>
+
+</html>

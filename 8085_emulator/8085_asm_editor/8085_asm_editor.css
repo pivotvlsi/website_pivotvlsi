@@ -1,0 +1,371 @@
+:root {
+  --पृष्ठभूमि: #0b0f19;
+  --फलक-पृष्ठभूमि: rgba(17, 24, 39, 0.78);
+  --फलक-सीमा: rgba(99, 102, 241, 0.25);
+  --वर्ण-प्राथमिक: #6366f1;
+  --वर्ण-द्वितीयक: #06b6d4;
+  --वर्ण-आभा: #ec4899;
+  --वर्ण-सफलता: #10b981;
+  --वर्ण-चेतावनी: #f59e0b;
+  --वर्ण-संकट: #ef4444;
+  --वर्ण-पाठ: #f8fafc;
+  --वर्ण-उपपाठ: #94a3b8;
+  --वर्ण-कांच: rgba(255, 255, 255, 0.04);
+  --छाया-द्युति: 0 0 25px rgba(99, 102, 241, 0.35);
+  --संक्रमण-काल: 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: radial-gradient(circle at 15% 20%, #1e1b4b 0%, var(--पृष्ठभूमि) 50%, #030712 100%);
+  color: var(--वर्ण-पाठ);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* शीर्षपट्टिका (Header) */
+.शीर्षपट्टिका {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(11, 15, 25, 0.88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--फलक-सीमा);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.शीर्षपट्टिका-शीर्षक {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.प्रतीक-चिह्न {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--वर्ण-प्राथमिक), var(--वर्ण-द्वितीयक));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--छाया-द्युति);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: #fff;
+}
+
+h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffffff, #cbd5e1, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.उपशीर्षक {
+  font-size: 0.8rem;
+  color: var(--वर्ण-उपपाठ);
+}
+
+.नियन्त्रण-पट्टिका {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.क्रिया-कुञ्जी {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--फलक-सीमा);
+  color: var(--वर्ण-पाठ);
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all var(--संक्रमण-काल);
+  text-decoration: none;
+}
+
+.क्रिया-कुञ्जी:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--वर्ण-प्राथमिक);
+  transform: translateY(-1px);
+}
+
+.क्रिया-कुञ्जी-प्राथमिक {
+  background: linear-gradient(135deg, var(--वर्ण-प्राथमिक), #4338ca);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.क्रिया-कुञ्जी-प्राथमिक:hover {
+  background: linear-gradient(135deg, #4f46e5, #3730a3);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+}
+
+.क्रिया-कुञ्जी-सफलता {
+  background: linear-gradient(135deg, #059669, #047857);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #fff;
+}
+
+.क्रिया-कुञ्जी-सफलता:hover {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+.क्रिया-कुञ्जी-संकट {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.क्रिया-कुञ्जी-संकट:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: var(--वर्ण-संकट);
+}
+
+/* मुख्य सम्पादक मंच (Main Layout Grid) */
+.सम्पादक-मंच {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.25rem;
+  padding: 1.25rem 2rem;
+  max-width: 1700px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .सम्पादक-मंच {
+    grid-template-columns: 1fr;
+  }
+}
+
+.फलक {
+  background: var(--फलक-पृष्ठभूमि);
+  border: 1px solid var(--फलक-सीमा);
+  border-radius: 14px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.फलक-शीर्ष {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.फलक-शीर्षक {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.फलक-शीर्षक-संकेत {
+  font-size: 0.75rem;
+  color: var(--वर्ण-उपपाठ);
+  font-family: 'Fira Code', monospace;
+}
+
+/* सम्पादक आवरण (Editor Area) */
+.सम्पादक-पात्र {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 480px;
+  background: #050811;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.पंक्ति-क्रमांक-स्तम्भ {
+  width: 48px;
+  padding: 0.8rem 0.4rem;
+  background: #03060d;
+  color: #475569;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  text-align: right;
+  user-select: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-y: hidden;
+}
+
+.संहिता-पाठ-क्षेत्र {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: transparent;
+  color: #f8fafc;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border: none;
+  outline: none;
+  resize: none;
+  white-space: pre;
+  tab-size: 4;
+}
+
+/* स्थिति पट्टी (Status Bar) */
+.स्थिति-पट्टिका {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  font-family: 'Fira Code', monospace;
+  color: var(--वर्ण-उपपाठ);
+}
+
+/* सत्यापन फलक (Validation Banner) */
+.सत्यापन-फलक {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-family: 'Fira Code', monospace;
+  line-height: 1.45;
+  display: none;
+}
+
+.सत्यापन-फलक-सफल {
+  display: block;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid #10b981;
+  color: #34d399;
+}
+
+.सत्यापन-फलक-त्रुटि {
+  display: block;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid #ef4444;
+  color: #f87171;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+/* पार्श्व फलक (Side Panel) */
+.पार्श्व-फलक {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.लघु-कार्ड {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.लघु-कार्ड-शीर्षक {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ऑपकोड-सूची-ग्रिड {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.ऑपकोड-टैग {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 0.25rem 0.45rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ऑपकोड-टैग:hover {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: #818cf8;
+}
+
+.ऑपकोड-टैग span.नाम {
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.ऑपकोड-टैग span.द्विक {
+  color: #94a3b8;
+}
+
+.नमूना-बटन-समूह {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.नमूना-बटन {
+  text-align: left;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.नमूना-बटन:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #fff;
+}
+
+/* पादलेख (Footer) */
+footer {
+  padding: 1rem 2.5rem;
+  background: rgba(5, 8, 16, 0.9);
+  border-top: 1px solid var(--फलक-सीमा);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.78rem;
+  color: var(--वर्ण-उपपाठ);
+}
+

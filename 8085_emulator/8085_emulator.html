@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIVOT VLSI | Intel 8085 Microprocessor Simulator</title>
+  <meta name="description"
+    content="Interactive 8-Bit Intel 8085 Microprocessor Architecture GUI Simulator with Registers (A, B, C, D, E, H, L, M), 64KB Memory, 8-Bit ALU, and Assembly Studio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="8085_emulator.css">
+</head>
+
+<body>
+
+  <!-- शीर्षपट्टिका (Standard Fixed Navigation Header) -->
+  <header id="शीर्षपट्टिका">
+    <div id="चिह्नपात्रम्">
+      <a href="../index.html">
+        <img src="../home_page/company_logo.png" alt="PIVOT VLSI Institute Logo" id="चिह्नम्">
+      </a>
+    </div>
+    <ul id="मार्गसञ्चारकडी">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a></li>
+      <li><a href="../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a></li>
+      <li><a href="../workshop/workshop.html">Workshops</a></li>
+      <li><a href="../about_us/about_us.html">About</a></li>
+      <li><a href="../home_page/contact.html">Contact</a></li>
+    </ul>
+  </header>
+
+  <!-- उपशीर्षपट्टिका (Header & Simulator Toolbar) -->
+  <section class="उपशीर्षपट्टिका">
+    <div class="शीर्षपट्टिका-शीर्षक">
+      <div class="प्रतीक-चिह्न">8085</div>
+      <div>
+        <h1>PIVOT VLSI</h1>
+        <div class="उपशीर्षक">Intel 8085 Microprocessor Architecture Simulator</div>
+      </div>
+    </div>
+
+    <div class="नियन्त्रण-पट्टिका">
+      <div class="संकेतक-चिप">
+        <span class="बिन्दु-द्युति"></span>
+        <span id="घटिका-स्थिति">CLOCK: READY</span>
+      </div>
+      <div
+        style="display: flex; align-items: center; gap: 0.35rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 20px; padding: 0.25rem 0.6rem;">
+        <span style="font-size: 0.75rem; color: #a5b4fc; font-weight: 600;">⏱ Period / Freq:</span>
+        <input type="number" id="घटिका-काल-निवेश" value="1" min="0.001" step="any" oninput="घटिका_काल_परिवर्तनम्()"
+          placeholder="Value"
+          style="width: 55px; background: rgba(0, 0, 0, 0.4); color: #fff; border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 6px; padding: 2px 5px; font-size: 0.75rem; font-family: 'Fira Code', monospace; outline: none; text-align: center;">
+        <select id="घटिका-इकाई-चयन" onchange="घटिका_काल_परिवर्तनम्()"
+          style="background: rgba(17, 24, 39, 0.9); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 6px; font-size: 0.75rem; outline: none; cursor: pointer; font-family: 'Fira Code', monospace; padding: 2px 4px;">
+          <option value="KHz" selected>KHz</option>
+          <option value="MHz">MHz</option>
+        </select>
+      </div>
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="पद-चालन-कुञ्जी" onclick="पद_चालनम्()">
+        ▶ STEP
+      </button>
+      <button class="क्रिया-कुञ्जी" id="स्वचालित-चालन-कुञ्जी" onclick="स्वचालित_चालनम्()">
+        ⚡ AUTO RUN
+      </button>
+      <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" id="पुनःस्थापन-कुञ्जी" onclick="यन्त्र_पुनःस्थापनम्()">
+        ↺ RESET
+      </button>
+      <a href="8085_asm_editor/8085_asm_editor.html" class="क्रिया-कुञ्जी" target="_blank" title="Open 8085 Assembly Code Studio"
+        style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.5); text-decoration: none;">
+        📝 ASM Studio
+      </a>
+    </div>
+  </section>
+
+  <!-- मुख्य मंच (Main Workspace Grid: 3 Columns) -->
+  <main class="मुख्य-मंच">
+
+    <!-- स्तम्भ १: निर्देश स्मृति (8085 Memory & Program Viewer) -->
+    <section class="फलक" id="स्मृति-फलक">
+      <div class="फलक-शीर्ष">
+        <div class="फलक-शीर्षक">
+          <span>📜 Instruction Memory</span>
+        </div>
+        <span class="फलक-शीर्षक-संकेत" id="स्मृति-आकार-संकेत">64KB RAM (8-bit)</span>
+      </div>
+
+      <div class="बटन-समूह" style="gap: 0.5rem; flex-wrap: wrap;">
+        <label class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक"
+          style="padding: 0.4rem 0.8rem; font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;"
+          id="संचिका-आयात-लेबल">
+          📁 Import Assembly (.asm/.txt)
+          <input type="file" id="संचिका-भारक-निवेश" accept=".txt,.asm" style="display: none;"
+            onchange="संचिकातः_कार्यक्रम_भारणम्(event)">
+        </label>
+        <button class="क्रिया-कुञ्जी" id="निर्देश-सत्यापन-कुञ्जी" onclick="निर्देश_स्मृति_सत्यापनम्()"
+          title="Validate syntax, opcodes and operands of all instructions">
+          ✔️ Validate Instructions
+        </button>
+        <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" onclick="स्मृति_स्वच्छीकरणम्()">
+          🗑️ Clear Memory
+        </button>
+      </div>
+
+      <!-- निर्देश सत्यापन फलक (Validation Status Banner) -->
+      <div id="सत्यापन-फलक"
+        style="display: none; padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 0.75rem; font-family: 'Fira Code', monospace; line-height: 1.4; margin-bottom: 0.5rem;">
+      </div>
+
+      <!-- स्मृति आरम्भ पता चयन (Memory Origin selector) -->
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.78rem; color: var(--वर्ण-उपपाठ);">
+        <span>Base Address:</span>
+        <div style="display: flex; gap: 0.35rem; align-items: center;">
+          <input type="text" id="स्मृति-आरम्भ-निवेश" value="0800" maxlength="4"
+            style="width: 65px; background: rgba(0, 0, 0, 0.4); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 6px; padding: 2px 5px; font-size: 0.75rem; font-family: 'Fira Code', monospace; text-align: center;"
+            onchange="स्मृति_आरम्भ_परिवर्तनम्()">
+          <span style="font-family: 'Fira Code', monospace;">H</span>
+        </div>
+      </div>
+
+      <!-- निर्देश सूची -->
+      <div class="स्मृति-सूची" id="स्मृति-सूची-पात्र">
+        <!-- JS से गतिशील रूप से भरी जाएगी -->
+      </div>
+    </section>
+
+    <!-- स्तम्भ २: केन्द्रीय प्रक्रमक मंच एवं अंकगणितीय तर्क इकाई (ALU Engine) -->
+    <section class="केन्द्र-मंच">
+
+      <!-- विशेष प्रयोजन पंजिका (PC, SP, Clock Cycle, Instruction Register) -->
+      <div class="विशेष-पंजिका-ग्रिड" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="लघु-पंजिका">
+          <span class="लघु-पंजिका-नाम">Program Counter (PC)</span>
+          <span class="लघु-पंजिका-मान" id="गणक-मान">0x0800</span>
+        </div>
+        <div class="लघु-पंजिका">
+          <span class="लघु-पंजिका-नाम">Stack Pointer (SP)</span>
+          <span class="लघु-पंजिका-मान" id="स्तूप-सूचक-मान" style="color: #38bdf8;">0xFFFF</span>
+        </div>
+        <div class="लघु-पंजिका">
+          <span class="लघु-पंजिका-नाम">Clock Cycles (T-States)</span>
+          <span class="लघु-पंजिका-मान" id="घटिका-चक्र-मान" style="color: #fbbf24;">0 T</span>
+        </div>
+        <div class="लघु-पंजिका">
+          <span class="लघु-पंजिका-नाम">Instruction Reg (IR)</span>
+          <span class="लघु-पंजिका-मान" id="निर्देश-पंजिका-मान">0x00 [NOP]</span>
+        </div>
+      </div>
+
+      <!-- वास्तुकला आरेख व 8085 पृथक् ALU -->
+      <div class="वास्तुकला-पटल">
+        <div class="फलक-शीर्षक" style="width: 100%; justify-content: space-between;">
+          <span>⚡ Arithmetic Logic Unit (ALU)</span>
+          <span class="फलक-शीर्षक-संकेत">8-Bit 8085 Core</span>
+        </div>
+
+        <!-- 8085 ध्वजा पट्टिका (Sign, Zero, Aux Carry, Parity, Carry) -->
+        <div class="ध्वजा-पट्टिका">
+          <div class="ध्वजा-कोष्ठक" title="Sign Flag (S): Bit 7 is set (Negative)">
+            <span class="ध्वजा-दीपक" id="चिह्न-ध्वजा-दीपक"></span>
+            <span>SF (Sign)</span>
+          </div>
+          <div class="ध्वजा-कोष्ठक" title="Zero Flag (Z): Result is 0">
+            <span class="ध्वजा-दीपक" id="शून्य-ध्वजा-दीपक"></span>
+            <span>ZF (Zero)</span>
+          </div>
+          <div class="ध्वजा-कोष्ठक" title="Auxiliary Carry Flag (AC): Carry out from Bit 3 to Bit 4">
+            <span class="ध्वजा-दीपक" id="सहायक-वह-दीपक"></span>
+            <span>AC (Aux)</span>
+          </div>
+          <div class="ध्वजा-कोष्ठक" title="Parity Flag (P): Even number of 1s">
+            <span class="ध्वजा-दीपक" id="समता-ध्वजा-दीपक"></span>
+            <span>PF (Parity)</span>
+          </div>
+          <div class="ध्वजा-कोष्ठक" title="Carry Flag (CY): Arithmetic overflow or borrow">
+            <span class="ध्वजा-दीपक" id="हासिल-ध्वजा-दीपक"></span>
+            <span>CY (Carry)</span>
+          </div>
+        </div>
+
+        <!-- 8085 ALU Display Component with Wedge & Inputs -->
+        <div class="गणना-यन्त्र-आवरण">
+          <div class="गणना-निवेश-संकेतक">
+            <div class="गणना-निवेश-क" id="संकेतक-निवेश-क">Operand A: Accumulator = 00000000 (0x00)</div>
+            <div class="गणना-निवेश-ख" id="संकेतक-निवेश-ख">Operand B: Register B = 00000000 (0x00)</div>
+          </div>
+
+          <div class="गणना-यन्त्र-पिण्ड" id="गणना-यन्त्र-पिण्ड">
+            <div class="गणना-यन्त्र-शीर्षक">8085 ALU</div>
+            <div class="गणना-यन्त्र-संक्रिया-पाठ" id="संक्रिया-पाठ">ADD (A + B)</div>
+          </div>
+
+          <div class="गणना-निर्गम-संकेतक" id="संकेतक-निर्गम">
+            Result Output: 00000000 (0x00) [Flags: S:0 Z:0 AC:0 P:1 CY:0]
+          </div>
+        </div>
+
+        <!-- तात्कालिक निर्देश निष्पादन पट्टिका (Instant Instruction Execution Bar) -->
+        <div style="width: 100%; margin-top: 1.25rem; background: rgba(0, 0, 0, 0.35); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.35); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+          <div style="font-size: 0.85rem; font-weight: 600; color: #38bdf8; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>⚡ Instant Instruction Execution (ALU & Live 8085 CPU)</span>
+            <span style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ);">Direct Live Execution</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" id="तात्कालिक-निर्देश-निवेश" placeholder="e.g. ADD B, MVI A, 05H, SUB C, INR A, DAA, CMA"
+              style="flex: 1; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 0.45rem 0.75rem; color: #f8fafc; font-family: 'Fira Code', monospace; font-size: 0.82rem; outline: none;"
+              onkeydown="if(event.key==='Enter') तात्कालिक_निर्देश_निष्पादनम्()">
+            <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="तात्कालिक-निष्पादन-कुञ्जी" onclick="तात्कालिक_निर्देश_निष्पादनम्()"
+              style="padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 700; white-space: nowrap; border-radius: 8px;">
+              ⚡ Run Now
+            </button>
+          </div>
+          <div id="तात्कालिक-निर्देश-प्रतिक्रिया" style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ); margin-top: 0.4rem; font-family: 'Fira Code', monospace; min-height: 1.1rem;">
+            Tip: Type any 8085 instruction or click an ALU button below to execute instantly on live CPU.
+          </div>
+        </div>
+
+        <!-- Manual Interactive ALU Mode / Quick Test -->
+        <div style="width: 100%; margin-top: 1rem;">
+          <div
+            style="font-size: 0.82rem; color: var(--वर्ण-उपपाठ); margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span>Instant ALU Operations on ACC (A) with:</span>
+              <select id="गणक-द्वितीय-निवेश-चयन" onchange="द्वितीय_निवेश_परिवर्तनम्()"
+                style="background: rgba(15, 23, 42, 0.9); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 6px; padding: 2px 6px; font-size: 0.75rem; font-family: 'Fira Code', monospace; outline: none;">
+                <option value="B" selected>Reg B</option>
+                <option value="C">Reg C</option>
+                <option value="D">Reg D</option>
+                <option value="E">Reg E</option>
+                <option value="H">Reg H</option>
+                <option value="L">Reg L</option>
+                <option value="M">Memory [M]</option>
+                <option value="d8">Imm Data (05H)</option>
+              </select>
+            </div>
+            <span style="color: #38bdf8; font-size: 0.75rem;">8085 ALU Live Mode</span>
+          </div>
+
+          <!-- Comprehensive 8085 ALU Operations Grid (Grouped logically) -->
+          <div class="संक्रिया-ग्रिड" style="grid-template-columns: repeat(5, 1fr); gap: 0.35rem;">
+            <!-- Arithmetic Group -->
+            <button class="संक्रिया-कुञ्जी सक्रिय" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ADD')" title="Add without Carry: A = A + Reg">ADD (+)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ADC')" title="Add with Carry: A = A + Reg + CY">ADC (+CY)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SUB')" title="Subtract: A = A - Reg">SUB (-)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SBB')" title="Subtract with Borrow: A = A - Reg - CY">SBB (-CY)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMP')" title="Compare: Set flags for (A - Reg)">CMP (≟)</button>
+
+            <!-- Logic Group -->
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ANA')" title="Logical AND: A = A & Reg">ANA (&amp;)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ORA')" title="Logical OR: A = A | Reg">ORA (|)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('XRA')" title="Logical XOR: A = A ^ Reg">XRA (^)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DAA')" title="Decimal Adjust Accumulator (BCD)">DAA (BCD)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMA')" title="Complement Accumulator: A = ~A">CMA (~A)</button>
+
+            <!-- Increment / Decrement / Carry Controls -->
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('INR')" title="Increment Accumulator: A = A + 1">INR (+1)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DCR')" title="Decrement Accumulator: A = A - 1">DCR (-1)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMC')" title="Complement Carry Flag: CY = ~CY">CMC (~CY)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('STC')" title="Set Carry Flag: CY = 1">STC (CY=1)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CLC')" title="Clear Carry Flag: CY = 0">CLC (CY=0)</button>
+
+            <!-- Rotate Instructions -->
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RLC')" title="Rotate Left Circular: Bit 7 -> CY & Bit 0">RLC (↺8)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RRC')" title="Rotate Right Circular: Bit 0 -> CY & Bit 7">RRC (↻8)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RAL')" title="Rotate Left through Carry (9-bit rotate)">RAL (↺9)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RAR')" title="Rotate Right through Carry (9-bit rotate)">RAR (↻9)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DAD')" title="Double Add HL with chosen pair: HL = HL + rp">DAD (+HL)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- प्रचालन विवरण एवं संसूचना (Execution Log Console) -->
+      <div class="फलक" style="flex: 1;">
+        <div class="फलक-शीर्ष">
+          <div class="फलक-शीर्षक">
+            <span>💻 Execution Trace & Bus Activity</span>
+          </div>
+          <button class="क्रिया-कुञ्जी" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;"
+            onclick="लॉग_स्वच्छीकरणम्()">Clear</button>
+        </div>
+        <div class="विवरण-फलक" id="विवरण-लॉग-पात्र">
+          <div class="विवरण-प्रविष्टि">
+            <span class="विवरण-समय">[00:00:00]</span>
+            <span class="विवरण-संदेश">Intel 8085 Microprocessor initialized. Ready to execute instructions.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- स्तम्भ ३: 8085 दत्त पंजिका (8-Bit Registers: A, B, C, D, E, H, L, M) -->
+    <section class="फलक" id="पंजिका-फलक">
+      <div class="फलक-शीर्ष">
+        <div class="फलक-शीर्षक">
+          <span>🗄️ 8085 Data Registers</span>
+        </div>
+        <span class="फलक-शीर्षक-संकेत">8-Bit (0x00 - 0xFF)</span>
+      </div>
+
+      <div style="font-size: 0.78rem; color: var(--वर्ण-उपपाठ); margin-bottom: 0.25rem;">
+        Click individual bits (7 down to 0) to toggle values directly in real-time.
+      </div>
+
+      <!-- Register Pairs Summary Bar -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; background: rgba(0,0,0,0.25); padding: 0.4rem 0.6rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); font-family: 'Fira Code', monospace; font-size: 0.75rem;">
+        <div>BC: <span id="युग्म-बीसी-मान" style="color: #38bdf8;">0x0000</span></div>
+        <div>DE: <span id="युग्म-डीई-मान" style="color: #38bdf8;">0x0000</span></div>
+        <div>HL: <span id="युग्म-एचएल-मान" style="color: #38bdf8;">0x0000</span></div>
+      </div>
+
+      <div class="पंजिका-जाल" id="पंजिका-सूची-जाल">
+        <!-- Register A (Accumulator) -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-A">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register A</span>
+              <span class="पंजिका-टैग">Accumulator</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-A">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-A">
+            <!-- 8 bits (7 down to 0) -->
+          </div>
+        </div>
+
+        <!-- Register B -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-B">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register B</span>
+              <span class="पंजिका-टैग">BC Pair (High)</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-B">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-B"></div>
+        </div>
+
+        <!-- Register C -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-C">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register C</span>
+              <span class="पंजिका-टैग">BC Pair (Low)</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-C">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-C"></div>
+        </div>
+
+        <!-- Register D -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-D">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register D</span>
+              <span class="पंजिका-टैग">DE Pair (High)</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-D">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-D"></div>
+        </div>
+
+        <!-- Register E -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-E">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register E</span>
+              <span class="पंजिका-टैग">DE Pair (Low)</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-E">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-E"></div>
+        </div>
+
+        <!-- Register H -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-H">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register H</span>
+              <span class="पंजिका-टैग">HL Pair (High)</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-H">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-H"></div>
+        </div>
+
+        <!-- Register L -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-L">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Register L</span>
+              <span class="पंजिका-टैग">HL Pair (Low)</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-L">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-L"></div>
+        </div>
+
+        <!-- Memory Reference M [HL] -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-M" style="border-color: rgba(245, 158, 11, 0.4);">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Memory [M]</span>
+              <span class="पंजिका-टैग" id="स्मृति-एम-संकेतक">@[HL: 0x0000]</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-M">0x00 (0)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-M"></div>
+        </div>
+      </div>
+
+      <!-- द्रुत पंजिका स्थापन (Quick Value Set) -->
+      <div class="निर्देश-संपादक" style="margin-top: auto;">
+        <span style="font-size: 0.8rem; font-weight: 600; color: #a5b4fc;">⚡ Direct Register Value Set</span>
+        <div class="निवेश-पंक्ति">
+          <select id="द्रुत-पंजिका-चयन">
+            <option value="A">Register A (ACC)</option>
+            <option value="B">Register B</option>
+            <option value="C">Register C</option>
+            <option value="D">Register D</option>
+            <option value="E">Register E</option>
+            <option value="H">Register H</option>
+            <option value="L">Register L</option>
+            <option value="M">Memory [HL]</option>
+          </select>
+          <input type="text" id="द्रुत-मूल्य-निवेश" value="05H" placeholder="e.g. 05H or 5" style="width: 80px;">
+          <button class="क्रिया-कुञ्जी" onclick="द्रुत_पंजिका_स्थापनम्()">Load</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- पादलेख (Standard Uniform Site Footer) -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>PIVOT VLSI</h4>
+        <p>Elevating your potential through premier educational programs and practical silicon design.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="../index.html">Home</a>
+        <a href="../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a>
+        <a href="../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a>
+        <a href="../workshop/workshop.html">Workshops</a>
+        <a href="../about_us/about_us.html">About</a>
+        <a href="../home_page/contact.html">Contact</a>
+        <a href="../sitemap.xml">Sitemap</a>
+      </div>
+      <div class="footer-section">
+        <h4>Legal &amp; Policies</h4>
+        <a href="../policies/terms_of_service.html">Terms of Service</a>
+        <a href="../policies/refund_and_cancellation_policy.html">Refund &amp; Cancellation Policy</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact Info</h4>
+        <p>Email: info@pivotvlsi.in</p>
+        <div style="margin-top: 15px; display: flex; gap: 15px;">
+          <a href="https://www.youtube.com/@PIVOT-vlsi" target="_blank" rel="noopener noreferrer" style="color: #ff0000; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="YouTube">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/pivot-vlsi/" target="_blank" rel="noopener noreferrer" style="color: #0077b5; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="https://github.com/pivotvlsi" target="_blank" rel="noopener noreferrer" style="color: #ffffff; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 PIVOT VLSI. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- 8085 प्रक्रमक कार्यप्रणाली लिपि (External 8085 Processor Javascript) -->
+  <script type="module" src="8085_emulator.js"></script>
+</body>
+
+</html>

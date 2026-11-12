@@ -1,0 +1,81 @@
+import { describe, test, expect } from "vitest";
+import * as fc from "fast-check";
+import { runTest, runAndGetState } from "./test-utils";
+
+describe("XRI Instruction Tests", () => {
+    test("XRI: Performs logical XOR between accumulator and immediate data, resets carry and auxiliary carry flags", async () => {
+        await fc.assert(
+            fc.asyncProperty(
+                fc.integer({ min: 0x00, max: 0xff }), // Random 8-bit accumulator value
+                fc.integer({ min: 0x00, max: 0xff }), // Random 8-bit immediate value
+                fc.record({
+                    z: fc.boolean(),
+                    s: fc.boolean(),
+                    p: fc.boolean(),
+                    c: fc.boolean(),
+                    ac: fc.boolean(),
+                }), // Random initial flag states
+                async (accumulator, immediateValue, flags) => {
+                    const result = accumulator ^ immediateValue;
+
+                    // Calculate expected flags
+                    const zeroFlag = result === 0;
+                    const signFlag = (result & 0x80) !== 0;
+                    const parityFlag =
+                        result
+                            .toString(2)
+                            .split("")
+                            .filter((bit) => bit === "1").length %
+                            2 ===
+                        0;
+
+                    const code = `
+                      org 0x0000
+                      xri ${immediateValue}
+                      hlt
+                    `;
+
+                    // Define the initial state of the CPU
+                    const initialCpuState = {
+                        accumulator,
+                        registers: {
+                            bc: { high: 0x00, low: 0x00 },
+                            de: { high: 0x00, low: 0x00 },
+                            hl: { high: 0x00, low: 0x00 },
+                        },
+                        flags, // Randomized flags from fast-check
+                    };
+
+                    // Define the expected state of the CPU after execution
+                    const expectedCpuState = {
+                        ...initialCpuState,
+                        accumulator: result, // Result of the XOR operation
+                        flags: {
+                            z: zeroFlag,
+                            s: signFlag,
+                            p: parityFlag,
+                            c: false, // Carry flag is always reset to 0 by XRI
+                            ac: false, // Auxiliary carry flag is always reset to 0 by XRI
+                        },
+                        programCounter: 0x0003,
+                    };
+
+                    await runTest(code, initialCpuState, expectedCpuState);
+                },
+            ),
+            { verbose: true, numRuns: 100 }, // Run 100 variations for XRI instruction
+        );
+    });
+});
+
+// Worked example from the Intel 8080/8085 Assembly Language Programming Manual, Chapter 3.
+describe('XRI Instruction Manual Example', () => {
+    // "Assume that the control flag byte is positioned normally in the
+    // accumulator, and the program must set OFF bit 6 and set bit 7 ON...
+    // Accumulator 01001100, Immediate data 11000000, result 10001100"
+    test('XRI: 4CH exclusive-ORed with C0H is 8CH', async () => {
+        const result = await runAndGetState('xri 0C0H\nhlt', { accumulator: 0x4c });
+
+        expect(result.accumulator).toBe(0x8c);
+    });
+});

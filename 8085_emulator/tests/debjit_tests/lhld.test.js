@@ -1,0 +1,82 @@
+import { describe, test, expect } from "vitest";
+import * as fc from "fast-check";
+import { runTest, runAndGetState } from './test-utils';
+
+describe("LHLD Instruction Tests", () => {
+    test("LHLD: Loads L and H register values from specified memory locations", async () => {
+        await fc.assert(
+            fc.asyncProperty(
+                fc.integer({ min: 0x0005, max: 0xfffe }), // Random 16-bit memory address
+                fc.integer({ min: 0x00, max: 0xff }), // Random 8-bit memory value for L
+                fc.integer({ min: 0x00, max: 0xff }), // Random 8-bit memory value for H
+                fc.record({
+                    z: fc.boolean(),
+                    s: fc.boolean(),
+                    p: fc.boolean(),
+                    c: fc.boolean(),
+                    ac: fc.boolean(),
+                }), // Random initial flag states
+                async (memoryAddress, lValue, hValue, flags) => {
+                    const code = `
+                      org 0x0000
+                      lhld ${memoryAddress}
+                      hlt
+                    `;
+
+                    // Define the initial state of the CPU
+                    const initialCpuState = {
+                        accumulator: 0x00, // Initial accumulator value
+                        memory: {
+                            [memoryAddress]: lValue, // L value stored at specified memory address
+                            [memoryAddress + 1]: hValue, // H value stored at the next memory address
+                        },
+                        registers: {
+                            bc: { high: 0x00, low: 0x00 },
+                            de: { high: 0x00, low: 0x00 },
+                            hl: { high: 0x00, low: 0x00 }, // HL initially zero
+                        },
+                        flags, // Randomized flags from fast-check
+                    };
+
+                    // Define the expected state of the CPU after execution
+                    const expectedCpuState = {
+                        ...initialCpuState,
+                        registers: {
+                            ...initialCpuState.registers,
+                            hl: { high: hValue, low: lValue }, // HL registers updated with memory values
+                        },
+                        programCounter: 0x0004, // PC should increment by 3 after LHLD (3-byte instruction)
+                    };
+
+                    await runTest(code, initialCpuState, expectedCpuState);
+                },
+            ),
+            { verbose: true, numRuns: 100 }, // Run 100 variations for LHLD instruction
+        );
+    });
+});
+
+// Worked example from the Intel 8080/8085 Assembly Language Programming Manual, Chapter 3.
+describe('LHLD Instruction Manual Example', () => {
+    // "Assume that locations 3000 and 3001H contain the address 064EH stored
+    // in the format 4E06. In the following sequence, the MOV instruction moves
+    // a copy of the byte stored at address 064E into the accumulator."
+    test('LHLD then MOV A,M: loads HL with 064EH and reads through it', async () => {
+        const result = await runAndGetState('lhld 3000H\nmov a, m\nhlt', {
+            memory: { 0x3000: 0x4e, 0x3001: 0x06, 0x064e: 0x5a },
+        });
+
+        expect(result.registers.hl.high).toBe(0x06);
+        expect(result.registers.hl.low).toBe(0x4e);
+        expect(result.accumulator).toBe(0x5a);
+    });
+
+    test('LHLD FFFFH wraps the H-byte read to 0000H', async () => {
+        const result = await runAndGetState('org 0100H\nlhld 0FFFFH\nhlt', {
+            programCounter: 0x0100,
+            memory: { 0xffff: 0xcd, 0x0000: 0xab },
+        });
+
+        expect(result.registers.hl).toEqual({ high: 0xab, low: 0xcd });
+    });
+});
