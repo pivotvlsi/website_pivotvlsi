@@ -1,0 +1,10 @@
+{
+  "deployment": {
+    "name": "workshop_payment",
+    "type": "advancedio",
+    "stack": "node18"
+  },
+  "execution": {
+    "main": "index.js"
+  }
+}

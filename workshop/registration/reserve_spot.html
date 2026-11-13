@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve Your Spot | Jane Street Protocol Workshop | PIVOT</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Reserve your spot for PIVOT's 5-session Jane Street Protocol Workshop. Learn CPU architecture, low-latency design, and systems engineering.">
+    <meta name="keywords"
+        content="Jane Street Workshop Registration, PIVOT VLSI, Reserve Spot, CPU Architecture">
+    <meta name="author" content="PIVOT">
+
+    <meta property="og:title" content="Reserve Your Spot | Jane Street Protocol Workshop | PIVOT">
+    <meta property="og:description"
+        content="Reserve your spot for PIVOT's 5-session Jane Street Protocol Workshop. Fully refundable ₹10 commitment deposit.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pivotvlsi.in/workshop/registration/reserve_spot.html">
+    <meta property="og:image" content="https://pivotvlsi.in/home_page/company_logo.png">
+
+    <link rel="canonical" href="https://pivotvlsi.in/workshop/registration/reserve_spot.html">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="workshop.css">
+    <!-- Zoho Payments JS SDK for On-Site Checkout -->
+    <script src="https://static.zohocdn.com/zpay/zpay-js/v1/zpayments.js"></script>
+</head>
+
+<body>
+    <header id="शीर्षपट्टिका">
+        <div id="चिह्नपात्रम्">
+            <img src="../../home_page/company_logo.png" alt="PIVOT VLSI Institute Logo" id="चिह्नम्">
+        </div>
+        <ul id="मार्गसञ्चारकडी">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a></li>
+            <li><a href="../../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a></li>
+            <li><a href="workshop.html">Workshops</a></li>
+            <li><a href="../../about_us/about_us.html">About</a></li>
+            <li><a href="../../home_page/contact.html">Contact</a></li>
+        </ul>
+    </header>
+
+    <main id="मुख्यपृष्ठम्">
+        <section class="workshop-hero">
+            <span class="workshop-badge">
+                <i class="fas fa-ticket-alt"></i> Workshop Registration &amp; Spot Reservation
+            </span>
+            <h1>Reserve Your Spot: <span>Jane Street Protocol Workshop</span></h1>
+            <p>
+                Secure your seat for the intensive 5-session technical workshop. We cover custom CPU architecture in Session 1, followed by binary protocol framing, ultra-low latency RTL design, and interview preparation.
+            </p>
+        </section>
+
+        <section class="भुगतानविन्यासः">
+            <div class="भुगतानपात्रम्">
+                <!-- Session Highlight Summary -->
+                <div class="सत्रविवरणपेटिका" style="margin-bottom: 25px;">
+                    <div class="सत्रपदम्">
+                        <span class="सत्रसंख्या">5 Live Sessions</span>
+                        <span class="सत्रविवरणम्">Complete Jane Street Protocol Deep-Dive</span>
+                    </div>
+                    <div class="सत्रपदम्">
+                        <span class="सत्रसंख्या">Session 1 Focus</span>
+                        <span class="सत्रविवरणम्">Custom CPU Architecture, ISA &amp; Datapath</span>
+                    </div>
+                </div>
+
+                <!-- Transparency & Why Payment Card -->
+                <div class="शुल्कविवरणपेटिका">
+                    <div class="शुल्कशीर्षकम्">
+                        <i class="fas fa-shield-alt"></i> Why are you seeing a payment page for a FREE workshop?
+                    </div>
+                    <div class="शुल्कसूचना">
+                        <p><strong>This workshop is 100% free. The &#8377;10 fee is a fully refundable token deposit:</strong></p>
+                        <ul>
+                            <li><strong>Why &#8377;10 is kept purposely:</strong> In previous free sessions, automated bots and casual mass signups took up seats, leaving genuinely interested students without an opportunity to attend.</li>
+                            <li><strong>Anti-Bot &amp; Fair Seat Allocation:</strong> Requiring a nominal token prevents bots and stops any single individual from reserving multiple seats. This guarantees that only deserving, committed participants get a spot.</li>
+                            <li><strong>100% Refundable:</strong> The entire <strong>&#8377;10 will be refunded back to your payment source</strong> once you attend the workshop session!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Candidate Registration Details (First Name, Last Name, Email) -->
+                <form id="पञ्जीकरण-प्रपत्र" onsubmit="भुगतान_आरम्भः(event)">
+                    <div class="पञ्जीकरण-प्रपत्र-पेटिका">
+                        <div class="प्रपत्र-पङ्क्ति">
+                            <div class="प्रपत्र-समूह">
+                                <label class="प्रपत्र-लेबल" for="प्रार्थी-प्रथमनाम">
+                                    <i class="fas fa-user" style="color: var(--accent-blue);"></i> First Name *
+                                </label>
+                                <input type="text" id="प्रार्थी-प्रथमनाम" class="प्रपत्र-निवेश" placeholder="e.g. Rahul" required autocomplete="given-name">
+                            </div>
+
+                            <div class="प्रपत्र-समूह">
+                                <label class="प्रपत्र-लेबल" for="प्रार्थी-अन्तिमनाम">
+                                    <i class="fas fa-user" style="color: var(--accent-blue);"></i> Last Name *
+                                </label>
+                                <input type="text" id="प्रार्थी-अन्तिमनाम" class="प्रपत्र-निवेश" placeholder="e.g. Sharma" required autocomplete="family-name">
+                            </div>
+                        </div>
+
+                        <div class="प्रपत्र-समूह">
+                            <label class="प्रपत्र-लेबल" for="प्रार्थी-विपत्रम्">
+                                <i class="fas fa-envelope" style="color: var(--accent-blue);"></i> Email Address *
+                            </label>
+                            <input type="email" id="प्रार्थी-विपत्रम्" class="प्रपत्र-निवेश" placeholder="e.g. rahul@example.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <!-- Payment Action Area with UPI Details -->
+                    <div class="स्थानआरक्षणपेटिका">
+                        <div class="युपीआई-पट्टिका">
+                            <i class="fas fa-bolt"></i> UPI Payments Only (Zero Extra Charges)
+                        </div>
+
+                        <!-- Supported UPI Apps Showcase -->
+                        <div class="युपीआई-सङ्केत-चिह्नानि">
+                            <div class="युपीआई-चिह्न-पदम्"><i class="fab fa-google-pay" style="color: #4285F4; font-size: 1.1rem;"></i> Google Pay</div>
+                            <div class="युपीआई-चिह्न-पदम्"><i class="fas fa-wallet" style="color: #5f259f; font-size: 1rem;"></i> PhonePe</div>
+                            <div class="युपीआई-चिह्न-पदम्"><i class="fas fa-mobile-alt" style="color: #00b9f5; font-size: 1rem;"></i> Paytm</div>
+                            <div class="युपीआई-चिह्न-पदम्"><i class="fas fa-qrcode" style="color: #10b981; font-size: 1rem;"></i> Any UPI QR</div>
+                        </div>
+
+                        <!-- How Identity Is Tracked Notice -->
+                        <div class="युपीआई-विवरण-पेटिका">
+                            <p class="युपीआई-पादटिप्पणी"><strong>Automated Identification:</strong></p>
+                            <p class="युपीआई-पादटिप्पणी">Your Name and Email are bound to your &#8377;10 UPI transaction reference and logged directly to our workshop sheet for attendance and instant refund tracking.</p>
+                        </div>
+
+                        <!-- Zoho Payments Submission Button -->
+                        <button type="submit" class="स्थानआरक्षणकुञ्चिका" id="स्थानआरक्षणकुञ्चिका">
+                            <i class="fas fa-lock"></i> Pay &#8377;10 via UPI &amp; Reserve Spot
+                        </button>
+                        
+                        <p class="आरक्षणसूचना">
+                            <i class="fas fa-shield-alt" style="color: #00d4ff;"></i> Powered by Zoho Payments (UPI Exclusive) &bull; &#8377;10 will be 100% refunded to your UPI account upon session attendance.
+                        </p>
+                    </div>
+                </form>
+
+                <script>
+                async function भुगतान_आरम्भः(घटना) {
+                    घटना.preventDefault();
+                    const प्रथमनाम = document.getElementById('प्रार्थी-प्रथमनाम').value.trim();
+                    const अन्तिमनाम = document.getElementById('प्रार्थी-अन्तिमनाम').value.trim();
+                    const पूर्णनाम = `${प्रथमनाम} ${अन्तिमनाम}`.trim();
+                    const विपत्रम् = document.getElementById('प्रार्थी-विपत्रम्').value.trim();
+                    const कुञ्चिका = document.getElementById('स्थानआरक्षणकुञ्चिका');
+
+                    // Disable button and show loading state
+                    const मूल_पाठ = कुञ्चिका.innerHTML;
+                    कुञ्चिका.disabled = true;
+                    कुञ्चिका.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing UPI...';
+
+                    // Catalyst Endpoint URL
+                    const कैटलिस्ट_प्रान्तबिन्दु = "https://pasupathi-vlsi-60087793496.development.catalystserverless.in/server/workshop_payment/create-session";
+
+                    try {
+                        // 1. Attempt On-Site Checkout via Zoho Catalyst & zpayments.js
+                        if (typeof window.ZPayments !== 'undefined' && कैटलिस्ट_प्रान्तबिन्दु.indexOf('your-project') === -1) {
+                            const प्रतिक्रिया = await fetch(कैटलिस्ट_प्रान्तबिन्दु, {
+                                method: 'POST',
+                                headers: { 
+                                    'Content-Type': 'application/json',
+                                    'X-Workshop-Token': 'pivotvlsi-workshop-auth-2026'
+                                },
+                                body: JSON.stringify({ firstName: प्रथमनाम, lastName: अन्तिमनाम, email: विपत्रम् })
+                            });
+                            const परिणाम = await प्रतिक्रिया.json();
+
+                            if (परिणाम.success && परिणाम.sessionId) {
+                                let विन्यास = {
+                                    account_id: परिणाम.accountId,
+                                    payment_session_id: परिणाम.sessionId,
+                                    allowed_payment_methods: ["upi"]
+                                };
+                                let भुगतान_विजेट = window.ZPayments(विन्यास);
+                                भुगतान_विजेट.open();
+                                कुञ्चिका.disabled = false;
+                                कुञ्चिका.innerHTML = मूल_पाठ;
+                                return;
+                            } else {
+                                console.error("Payment session creation failed:", परिणाम);
+                                alert("Payment gateway authorization is pending or in progress: " + (परिणाम.error && (परिणाम.error.message || परिणाम.error.error_description) ? (परिणाम.error.message || परिणाम.error.error_description) : "Not Authorised"));
+                                कुञ्चिका.disabled = false;
+                                कुञ्चिका.innerHTML = मूल_पाठ;
+                                return;
+                            }
+                        }
+                    } catch (दोष) {
+                        console.warn("Catalyst session creation skipped, using direct payment link fallback:", दोष);
+                    }
+
+                    // 2. Direct Hosted Fallback Link
+                    const आधार_कडी = "https://payments.zoho.in"; // Replace with your Zoho Payments link
+                    const पूर्ण_कडी = `${आधार_कडी}?name=${encodeURIComponent(पूर्णनाम)}&email=${encodeURIComponent(विपत्रम्)}&amount=10`;
+                    window.open(पूर्ण_कडी, '_blank');
+
+                    कुञ्चिका.disabled = false;
+                    कुञ्चिका.innerHTML = मूल_पाठ;
+                }
+                </script>
+
+                <div class="प्रतिनिवर्तनपेटिका">
+                    <a href="workshop.html" class="प्रतिनिवर्तनकडी">
+                        <i class="fas fa-arrow-left"></i> Back to Workshop Overview
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>PIVOT VLSI</h4>
+                <p>Elevating your potential through premier educational programs and practical silicon design.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="../../index.html">Home</a>
+                <a href="../../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a>
+                <a href="../../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a>
+                <a href="workshop.html">Workshops</a>
+                <a href="../../about_us/about_us.html">About</a>
+                <a href="../../home_page/contact.html">Contact</a>
+                <a href="../../sitemap.xml">Sitemap</a>
+            </div>
+                        <div class="footer-section">
+                <h4>Legal &amp; Policies</h4>
+                <a href="../../policies/terms_of_service.html">Terms of Service</a>
+                <a href="../../policies/refund_and_cancellation_policy.html">Refund &amp; Cancellation Policy</a>
+            </div>
+<div class="footer-section">
+                <h4>Contact Info</h4>
+                <p>Email: info@pivotvlsi.in</p>
+                <div style="margin-top: 15px; display: flex; gap: 15px;">
+                    <a href="https://www.youtube.com/@PIVOT-vlsi" target="_blank" rel="noopener noreferrer" style="color: #ff0000; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform=\'scale(1.2)\'" onmouseout="this.style.transform=\'scale(1)\'" aria-label="YouTube">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/company/pivot-vlsi/" target="_blank" rel="noopener noreferrer" style="color: #0077b5; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform=\'scale(1.2)\'" onmouseout="this.style.transform=\'scale(1)\'" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    <a href="https://github.com/pivotvlsi" target="_blank" rel="noopener noreferrer" style="color: #ffffff; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform=\'scale(1.2)\'" onmouseout="this.style.transform=\'scale(1)\'" aria-label="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 PIVOT VLSI. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Arattai Floating Button -->
+    <a href="https://chat.arattai.in/groups/u43545f313436383531353034333735383534313038305f32303032393831373630372d47437c3031303032313133343232313137383734393339353938343430" class="arattai-float" target="_blank" rel="noopener noreferrer" title="Join our Arattai Group">
+        <img src="../../home_page/Arattai_logo.png" alt="Join Arattai Group" class="arattai-icon">
+    </a>
+</body>
+
+</html>
+

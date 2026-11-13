@@ -214,45 +214,149 @@ body {
 }
 
 /* --- Right Column: Zoho Form Container --- */
-.registration-column {
+.पञ्जीकरणस्तम्भः, .registration-column {
     position: sticky;
     top: 80px;
 }
 
-.registration-card {
-    background: rgba(255, 255, 255, 0.04);
+.पञ्जीकरणफलकम्, .registration-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 212, 255, 0.08));
     border: 1px solid var(--accent-blue);
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.15);
+    border-radius: 14px;
+    padding: 30px 25px;
+    box-shadow: 0 0 35px rgba(0, 212, 255, 0.2);
+    text-align: center;
 }
 
-.registration-card h2 {
-    font-size: 1.5rem;
+.पञ्जीकरणफलकम् h2, .registration-card h2 {
+    font-size: 1.6rem;
     color: #ffffff;
-    margin: 0 0 8px;
-    text-align: center;
+    margin: 0 0 10px;
 }
 
-.registration-card p.subtitle {
+.उपशीर्षकम्, .registration-card p.subtitle {
     color: var(--text-secondary);
-    text-align: center;
-    font-size: 0.9rem;
-    margin: 0 0 20px;
+    font-size: 0.95rem;
+    margin: 0 0 25px;
+    line-height: 1.5;
 }
 
-.zoho-form-wrapper {
-    background: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(0, 212, 255, 0.3);
+.सत्रविवरणपेटिका {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
 }
 
-.zoho-form-wrapper iframe {
-    display: block;
+.सत्रपदम् {
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+}
+
+.सत्रसंख्या {
+    font-weight: 700;
+    color: var(--accent-blue);
+    font-size: 0.92rem;
+    white-space: nowrap;
+    margin-right: 12px;
+}
+
+.सत्रविवरणम् {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    text-align: right;
+}
+
+/* --- Fee Explanation & Refund Notice --- */
+.शुल्कविवरणपेटिका {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.शुल्कशीर्षकम् {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent-gold);
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.शुल्कसूचना {
+    font-size: 0.84rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+.शुल्कसूचना p {
+    margin: 0 0 8px;
+    color: #ffffff;
+}
+
+.शुल्कसूचना ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.शुल्कसूचना li {
+    margin-bottom: 6px;
+    color: #cbd5e1;
+}
+
+.शुल्कसूचना strong {
+    color: #ffffff;
+}
+
+.स्थानआरक्षणपेटिका {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.स्थानआरक्षणकुञ्चिका {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     width: 100%;
-    min-height: 560px;
-    border: none;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, var(--accent-blue), #0088cc);
+    color: #060b1a;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+    border: 2px solid var(--accent-blue);
+    cursor: pointer;
+}
+
+.स्थानआरक्षणकुञ्चिका:hover {
+    background: transparent;
+    color: #00d4ff;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.7);
+    transform: translateY(-2px);
+}
+
+.आरक्षणसूचना {
+    margin-top: 15px;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.4;
 }
 
 /* --- GitHub Project Showcase Section --- */
@@ -403,7 +507,7 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .registration-column {
+    .पञ्जीकरणस्तम्भः, .registration-column {
         position: static;
     }
 
@@ -450,3 +554,168 @@ body {
     object-fit: cover;
 }
 
+
+/* --- Spot Reservation Separate Page Layout --- */
+.भुगतानविन्यासः {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px 20px 60px;
+}
+
+.भुगतानपात्रम् {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 212, 255, 0.08));
+    border: 1px solid var(--accent-blue);
+    border-radius: 14px;
+    padding: 35px 30px;
+    box-shadow: 0 0 35px rgba(0, 212, 255, 0.2);
+}
+
+.प्रतिनिवर्तनपेटिका {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.प्रतिनिवर्तनकडी {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.प्रतिनिवर्तनकडी:hover {
+    color: #ffffff;
+    transform: translateX(-4px);
+}
+
+/* --- UPI Specific Styling --- */
+.युपीआई-पट्टिका {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    border-radius: 20px;
+    color: #4ade80;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.युपीआई-सङ्केत-चिह्नानि {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 18px 0 8px;
+}
+
+.युपीआई-चिह्न-पदम् {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #f1f5f9;
+}
+
+.युपीआई-विवरण-पेटिका {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px dashed rgba(0, 212, 255, 0.35);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.युपीआई-सङ्केतः {
+    font-family: monospace;
+    font-size: 1.05rem;
+    color: #00d4ff;
+    background: rgba(0, 212, 255, 0.1);
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.युपीआई-पादटिप्पणी {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin: 0;
+}
+
+/* --- Registration Input Form Styling --- */
+.पञ्जीकरण-प्रपत्र-पेटिका {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    margin: 15px 0 20px;
+    text-align: left;
+}
+
+.प्रपत्र-पङ्क्ति {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .प्रपत्र-पङ्क्ति {
+        grid-template-columns: 1fr;
+    }
+}
+
+.प्रपत्र-समूह {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.प्रपत्र-लेबल {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.प्रपत्र-निवेश {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.प्रपत्र-निवेश:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.35);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.प्रपत्र-निवेश::placeholder {
+    color: #64748b;
+    font-size: 0.88rem;
+}

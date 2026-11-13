@@ -1,0 +1,12 @@
+{
+  "name": "workshop_payment",
+  "version": "1.0.0",
+  "description": "Zoho Catalyst Advanced I/O function for Jane Street Workshop ₹10 UPI Payment Session creation and verification",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "express": "^4.18.2",
+    "zcatalyst-sdk-node": "^1.1.0"
+  }
+}
+
