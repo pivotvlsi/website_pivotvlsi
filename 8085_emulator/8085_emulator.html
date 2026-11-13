@@ -28,13 +28,13 @@
       <li><a href="../index.html">Home</a></li>
       <li><a href="../educational_program/educational_program.html#चलच्चित्र-विभागः">Courses</a></li>
       <li><a href="../educational_program/educational_program.html#साक्षात्कार-उपकरणानि">Codelabs</a></li>
-      <li><a href="../workshop/workshop.html">Workshops</a></li>
+      <li><a href="../workshop/registration/workshop.html">Workshops</a></li>
       <li><a href="../about_us/about_us.html">About</a></li>
       <li><a href="../home_page/contact.html">Contact</a></li>
     </ul>
   </header>
 
-  <!-- उपशीर्षपट्टिका (Header & Simulator Toolbar) -->
+  <!-- उपशीर्षपट्टिका (Simulator Action Toolbar) -->
   <section class="उपशीर्षपट्टिका">
     <div class="शीर्षपट्टिका-शीर्षक">
       <div class="प्रतीक-चिह्न">8085</div>
@@ -70,10 +70,16 @@
       <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" id="पुनःस्थापन-कुञ्जी" onclick="यन्त्र_पुनःस्थापनम्()">
         ↺ RESET
       </button>
-      <a href="8085_asm_editor/8085_asm_editor.html" class="क्रिया-कुञ्जी" target="_blank" title="Open 8085 Assembly Code Studio"
+      <a href="8085_asm_format_guide.html" class="क्रिया-कुञ्जी" target="_blank"
+        title="View 8085 Assembly (.asm) & Memory Format Documentation"
+        style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); text-decoration: none;">
+        📖 ASM Guide
+      </a>
+      <button class="क्रिया-कुञ्जी" onclick="सम्पादके_उद्घाटनम्()"
+        title="Open 8085 Assembly Code Studio"
         style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.5); text-decoration: none;">
         📝 ASM Studio
-      </a>
+      </button>
     </div>
   </section>
 
@@ -86,7 +92,14 @@
         <div class="फलक-शीर्षक">
           <span>📜 Instruction Memory</span>
         </div>
-        <span class="फलक-शीर्षक-संकेत" id="स्मृति-आकार-संकेत">64KB RAM (8-bit)</span>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <a href="8085_asm_format_guide.html" target="_blank"
+            style="color: #38bdf8; font-size: 0.72rem; text-decoration: underline; font-family: 'Fira Code', monospace;"
+            title="Read .asm address format documentation">
+            📖 .asm Format Guide
+          </a>
+          <span class="फलक-शीर्षक-संकेत" id="स्मृति-आकार-संकेत">64KB RAM (8-bit)</span>
+        </div>
       </div>
 
       <div class="बटन-समूह" style="gap: 0.5rem; flex-wrap: wrap;">
@@ -101,6 +114,11 @@
           title="Validate syntax, opcodes and operands of all instructions">
           ✔️ Validate Instructions
         </button>
+        <button class="क्रिया-कुञ्जी" id="सम्पादक-उद्घाटन-कडी" onclick="सम्पादके_उद्घाटनम्()"
+          title="Open in 8085 Assembly Code Studio"
+          style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.5); text-decoration: none;">
+          📝 Open in 8085 ASM Editor
+        </button>
         <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-संकट" onclick="स्मृति_स्वच्छीकरणम्()">
           🗑️ Clear Memory
         </button>
@@ -111,18 +129,14 @@
         style="display: none; padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 0.75rem; font-family: 'Fira Code', monospace; line-height: 1.4; margin-bottom: 0.5rem;">
       </div>
 
-      <!-- स्मृति आरम्भ पता चयन (Memory Origin selector) -->
-      <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.78rem; color: var(--वर्ण-उपपाठ);">
-        <span>Base Address:</span>
-        <div style="display: flex; gap: 0.35rem; align-items: center;">
-          <input type="text" id="स्मृति-आरम्भ-निवेश" value="0800" maxlength="4"
-            style="width: 65px; background: rgba(0, 0, 0, 0.4); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 6px; padding: 2px 5px; font-size: 0.75rem; font-family: 'Fira Code', monospace; text-align: center;"
-            onchange="स्मृति_आरम्भ_परिवर्तनम्()">
-          <span style="font-family: 'Fira Code', monospace;">H</span>
-        </div>
+      <!-- मानक 8085 विसंयोजक शीर्षलेख (Industry-Standard Disassembly Table Header) -->
+      <div class="स्मृति-तालिका-शीर्ष">
+        <span>ADDR</span>
+        <span>HEX CODE</span>
+        <span>MNEMONIC</span>
       </div>
 
-      <!-- निर्देश सूची -->
+      <!-- निर्देश सूची / विसंयोजक तालिका (Disassembly Stream Table) -->
       <div class="स्मृति-सूची" id="स्मृति-सूची-पात्र">
         <!-- JS से गतिशील रूप से भरी जाएगी -->
       </div>
@@ -158,27 +172,37 @@
           <span class="फलक-शीर्षक-संकेत">8-Bit 8085 Core</span>
         </div>
 
-        <!-- 8085 ध्वजा पट्टिका (Sign, Zero, Aux Carry, Parity, Carry) -->
-        <div class="ध्वजा-पट्टिका">
+        <!-- 8085 ध्वजा पट्टिका (Sign, Zero, Aux Carry, Parity, Carry + Undocumented V and K) with values (0/1) -->
+        <div class="ध्वजा-पट्टिका" style="grid-template-columns: repeat(7, 1fr);">
           <div class="ध्वजा-कोष्ठक" title="Sign Flag (S): Bit 7 is set (Negative)">
-            <span class="ध्वजा-दीपक" id="चिह्न-ध्वजा-दीपक"></span>
+            <span class="ध्वजा-मान-कोष्ठक" id="चिह्न-ध्वजा-मान">0</span>
             <span>SF (Sign)</span>
           </div>
           <div class="ध्वजा-कोष्ठक" title="Zero Flag (Z): Result is 0">
-            <span class="ध्वजा-दीपक" id="शून्य-ध्वजा-दीपक"></span>
+            <span class="ध्वजा-मान-कोष्ठक" id="शून्य-ध्वजा-मान">0</span>
             <span>ZF (Zero)</span>
           </div>
           <div class="ध्वजा-कोष्ठक" title="Auxiliary Carry Flag (AC): Carry out from Bit 3 to Bit 4">
-            <span class="ध्वजा-दीपक" id="सहायक-वह-दीपक"></span>
+            <span class="ध्वजा-मान-कोष्ठक" id="सहायक-वह-मान">0</span>
             <span>AC (Aux)</span>
           </div>
           <div class="ध्वजा-कोष्ठक" title="Parity Flag (P): Even number of 1s">
-            <span class="ध्वजा-दीपक" id="समता-ध्वजा-दीपक"></span>
+            <span class="ध्वजा-मान-कोष्ठक" id="समता-ध्वजा-मान">0</span>
             <span>PF (Parity)</span>
           </div>
           <div class="ध्वजा-कोष्ठक" title="Carry Flag (CY): Arithmetic overflow or borrow">
-            <span class="ध्वजा-दीपक" id="हासिल-ध्वजा-दीपक"></span>
+            <span class="ध्वजा-मान-कोष्ठक" id="हासिल-ध्वजा-मान">0</span>
             <span>CY (Carry)</span>
+          </div>
+          <div class="ध्वजा-कोष्ठक"
+            title="Signed Overflow Flag (V): Undocumented 8085 bit 1 for two's complement overflow">
+            <span class="ध्वजा-मान-कोष्ठक" id="अधिकप्रवाह-ध्वजा-मान"
+              style="border-color: rgba(236, 72, 153, 0.4);">0</span>
+            <span style="color: #f472b6;">VF (Ovf)</span>
+          </div>
+          <div class="ध्वजा-कोष्ठक" title="Comparison Flag (K / X5): Undocumented 8085 bit 5 for signed comparisons">
+            <span class="ध्वजा-मान-कोष्ठक" id="के-ध्वजा-मान" style="border-color: rgba(168, 85, 247, 0.4);">0</span>
+            <span style="color: #c084fc;">KF (X5)</span>
           </div>
         </div>
 
@@ -200,8 +224,10 @@
         </div>
 
         <!-- तात्कालिक निर्देश निष्पादन पट्टिका (Instant Instruction Execution Bar) -->
-        <div style="width: 100%; margin-top: 1.25rem; background: rgba(0, 0, 0, 0.35); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.35); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-          <div style="font-size: 0.85rem; font-weight: 600; color: #38bdf8; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div
+          style="width: 100%; margin-top: 1.25rem; background: rgba(0, 0, 0, 0.35); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.35); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+          <div
+            style="font-size: 0.85rem; font-weight: 600; color: #38bdf8; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
             <span>⚡ Instant Instruction Execution (ALU & Live 8085 CPU)</span>
             <span style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ);">Direct Live Execution</span>
           </div>
@@ -209,12 +235,14 @@
             <input type="text" id="तात्कालिक-निर्देश-निवेश" placeholder="e.g. ADD B, MVI A, 05H, SUB C, INR A, DAA, CMA"
               style="flex: 1; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 0.45rem 0.75rem; color: #f8fafc; font-family: 'Fira Code', monospace; font-size: 0.82rem; outline: none;"
               onkeydown="if(event.key==='Enter') तात्कालिक_निर्देश_निष्पादनम्()">
-            <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="तात्कालिक-निष्पादन-कुञ्जी" onclick="तात्कालिक_निर्देश_निष्पादनम्()"
+            <button class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक" id="तात्कालिक-निष्पादन-कुञ्जी"
+              onclick="तात्कालिक_निर्देश_निष्पादनम्()"
               style="padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 700; white-space: nowrap; border-radius: 8px;">
               ⚡ Run Now
             </button>
           </div>
-          <div id="तात्कालिक-निर्देश-प्रतिक्रिया" style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ); margin-top: 0.4rem; font-family: 'Fira Code', monospace; min-height: 1.1rem;">
+          <div id="तात्कालिक-निर्देश-प्रतिक्रिया"
+            style="font-size: 0.72rem; color: var(--वर्ण-उपपाठ); margin-top: 0.4rem; font-family: 'Fira Code', monospace; min-height: 1.1rem;">
             Tip: Type any 8085 instruction or click an ALU button below to execute instantly on live CPU.
           </div>
         </div>
@@ -223,7 +251,7 @@
         <div style="width: 100%; margin-top: 1rem;">
           <div
             style="font-size: 0.82rem; color: var(--वर्ण-उपपाठ); margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
               <span>Instant ALU Operations on ACC (A) with:</span>
               <select id="गणक-द्वितीय-निवेश-चयन" onchange="द्वितीय_निवेश_परिवर्तनम्()"
                 style="background: rgba(15, 23, 42, 0.9); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 6px; padding: 2px 6px; font-size: 0.75rem; font-family: 'Fira Code', monospace; outline: none;">
@@ -234,8 +262,11 @@
                 <option value="H">Reg H</option>
                 <option value="L">Reg L</option>
                 <option value="M">Memory [M]</option>
-                <option value="d8">Imm Data (05H)</option>
+                <option value="d8">Immediate Value (d8)</option>
               </select>
+              <input type="text" id="गणक-तात्कालिक-मूल्य-निवेश" value="05H" placeholder="e.g. 05H or 5"
+                style="width: 70px; background: rgba(0, 0, 0, 0.45); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.45); border-radius: 6px; padding: 2px 6px; font-size: 0.75rem; font-family: 'Fira Code', monospace; outline: none; text-align: center;"
+                oninput="द्वितीय_निवेश_परिवर्तनम्()">
             </div>
             <span style="color: #38bdf8; font-size: 0.75rem;">8085 ALU Live Mode</span>
           </div>
@@ -243,32 +274,52 @@
           <!-- Comprehensive 8085 ALU Operations Grid (Grouped logically) -->
           <div class="संक्रिया-ग्रिड" style="grid-template-columns: repeat(5, 1fr); gap: 0.35rem;">
             <!-- Arithmetic Group -->
-            <button class="संक्रिया-कुञ्जी सक्रिय" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ADD')" title="Add without Carry: A = A + Reg">ADD (+)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ADC')" title="Add with Carry: A = A + Reg + CY">ADC (+CY)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SUB')" title="Subtract: A = A - Reg">SUB (-)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SBB')" title="Subtract with Borrow: A = A - Reg - CY">SBB (-CY)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMP')" title="Compare: Set flags for (A - Reg)">CMP (≟)</button>
+            <button class="संक्रिया-कुञ्जी सक्रिय" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ADD')"
+              title="Add without Carry: A = A + Reg">ADD (+)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ADC')"
+              title="Add with Carry: A = A + Reg + CY">ADC (+CY)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SUB')"
+              title="Subtract: A = A - Reg">SUB (-)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('SBB')"
+              title="Subtract with Borrow: A = A - Reg - CY">SBB (-CY)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMP')"
+              title="Compare: Set flags for (A - Reg)">CMP (≟)</button>
 
             <!-- Logic Group -->
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ANA')" title="Logical AND: A = A & Reg">ANA (&amp;)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ORA')" title="Logical OR: A = A | Reg">ORA (|)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('XRA')" title="Logical XOR: A = A ^ Reg">XRA (^)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DAA')" title="Decimal Adjust Accumulator (BCD)">DAA (BCD)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMA')" title="Complement Accumulator: A = ~A">CMA (~A)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ANA')"
+              title="Logical AND: A = A & Reg">ANA (&amp;)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('ORA')"
+              title="Logical OR: A = A | Reg">ORA (|)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('XRA')"
+              title="Logical XOR: A = A ^ Reg">XRA (^)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DAA')"
+              title="Decimal Adjust Accumulator (BCD)">DAA (BCD)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMA')"
+              title="Complement Accumulator: A = ~A">CMA (~A)</button>
 
             <!-- Increment / Decrement / Carry Controls -->
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('INR')" title="Increment Accumulator: A = A + 1">INR (+1)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DCR')" title="Decrement Accumulator: A = A - 1">DCR (-1)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMC')" title="Complement Carry Flag: CY = ~CY">CMC (~CY)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('STC')" title="Set Carry Flag: CY = 1">STC (CY=1)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CLC')" title="Clear Carry Flag: CY = 0">CLC (CY=0)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('INR')"
+              title="Increment Accumulator: A = A + 1">INR (+1)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DCR')"
+              title="Decrement Accumulator: A = A - 1">DCR (-1)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CMC')"
+              title="Complement Carry Flag: CY = ~CY">CMC (~CY)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('STC')"
+              title="Set Carry Flag: CY = 1">STC (CY=1)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('CLC')"
+              title="Clear Carry Flag: CY = 0">CLC (CY=0)</button>
 
             <!-- Rotate Instructions -->
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RLC')" title="Rotate Left Circular: Bit 7 -> CY & Bit 0">RLC (↺8)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RRC')" title="Rotate Right Circular: Bit 0 -> CY & Bit 7">RRC (↻8)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RAL')" title="Rotate Left through Carry (9-bit rotate)">RAL (↺9)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RAR')" title="Rotate Right through Carry (9-bit rotate)">RAR (↻9)</button>
-            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DAD')" title="Double Add HL with chosen pair: HL = HL + rp">DAD (+HL)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RLC')"
+              title="Rotate Left Circular: Bit 7 -> CY & Bit 0">RLC (↺8)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RRC')"
+              title="Rotate Right Circular: Bit 0 -> CY & Bit 7">RRC (↻8)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RAL')"
+              title="Rotate Left through Carry (9-bit rotate)">RAL (↺9)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('RAR')"
+              title="Rotate Right through Carry (9-bit rotate)">RAR (↻9)</button>
+            <button class="संक्रिया-कुञ्जी" onclick="प्रत्यक्ष_संक्रिया_परीक्षण('DAD')"
+              title="Double Add HL with chosen pair: HL = HL + rp">DAD (+HL)</button>
           </div>
         </div>
       </div>
@@ -304,11 +355,48 @@
         Click individual bits (7 down to 0) to toggle values directly in real-time.
       </div>
 
-      <!-- Register Pairs Summary Bar -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; background: rgba(0,0,0,0.25); padding: 0.4rem 0.6rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); font-family: 'Fira Code', monospace; font-size: 0.75rem;">
+      <!-- Register Pairs & 16-bit Pointers Summary Bar -->
+      <div
+        style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; background: rgba(0,0,0,0.25); padding: 0.4rem 0.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); font-family: 'Fira Code', monospace; font-size: 0.72rem; text-align: center;">
         <div>BC: <span id="युग्म-बीसी-मान" style="color: #38bdf8;">0x0000</span></div>
         <div>DE: <span id="युग्म-डीई-मान" style="color: #38bdf8;">0x0000</span></div>
         <div>HL: <span id="युग्म-एचएल-मान" style="color: #38bdf8;">0x0000</span></div>
+        <div>SP: <span id="दत्त-स्तूप-मान" style="color: #a78bfa;">0xFFFF</span></div>
+        <div>PC: <span id="दत्त-गणक-मान" style="color: #34d399;">0x0800</span></div>
+      </div>
+
+      <!-- 8085 ध्वजा पट्टिका (Data Registers Panel Flags View with 0/1 values) -->
+      <div class="ध्वजा-पट्टिका"
+        style="grid-template-columns: repeat(7, 1fr); padding: 0.35rem 0.5rem; margin: 0.35rem 0; border-radius: 8px; font-size: 0.72rem;">
+        <div class="ध्वजा-कोष्ठक" title="Sign Flag (S)">
+          <span class="ध्वजा-मान-कोष्ठक" id="दत्त-चिह्न-मान">0</span>
+          <span>SF</span>
+        </div>
+        <div class="ध्वजा-कोष्ठक" title="Zero Flag (Z)">
+          <span class="ध्वजा-मान-कोष्ठक" id="दत्त-शून्य-मान">0</span>
+          <span>ZF</span>
+        </div>
+        <div class="ध्वजा-कोष्ठक" title="Auxiliary Carry Flag (AC)">
+          <span class="ध्वजा-मान-कोष्ठक" id="दत्त-सहायक-मान">0</span>
+          <span>AC</span>
+        </div>
+        <div class="ध्वजा-कोष्ठक" title="Parity Flag (P)">
+          <span class="ध्वजा-मान-कोष्ठक" id="दत्त-समता-मान">0</span>
+          <span>PF</span>
+        </div>
+        <div class="ध्वजा-कोष्ठक" title="Carry Flag (CY)">
+          <span class="ध्वजा-मान-कोष्ठक" id="दत्त-हासिल-मान">0</span>
+          <span>CY</span>
+        </div>
+        <div class="ध्वजा-कोष्ठक" title="Signed Overflow Flag (V)">
+          <span class="ध्वजा-मान-कोष्ठक" id="दत्त-अधिकप्रवाह-मान"
+            style="border-color: rgba(236, 72, 153, 0.4);">0</span>
+          <span style="color: #f472b6;">VF</span>
+        </div>
+        <div class="ध्वजा-कोष्ठक" title="Comparison Flag (K / X5)">
+          <span class="ध्वजा-मान-कोष्ठक" id="दत्त-के-मान" style="border-color: rgba(168, 85, 247, 0.4);">0</span>
+          <span style="color: #c084fc;">KF</span>
+        </div>
       </div>
 
       <div class="पंजिका-जाल" id="पंजिका-सूची-जाल">
@@ -409,6 +497,36 @@
           </div>
           <div class="पंजिका-बिट-पट्टिका" id="बिट-पट्टिका-M"></div>
         </div>
+
+        <!-- Stack Pointer (SP) 16-bit Register Card -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-SP" style="border-color: rgba(167, 139, 250, 0.4);">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Stack Pointer (SP)</span>
+              <span class="पंजिका-टैग" style="background: rgba(167, 139, 250, 0.15); color: #c4b5fd;">16-Bit
+                Pointer</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-SP">0xFFFF (65535)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका-षोडश" id="बिट-पट्टिका-SP">
+            <!-- 16 bits (15 down to 0) -->
+          </div>
+        </div>
+
+        <!-- Program Counter (PC) 16-bit Register Card -->
+        <div class="पंजिका-कार्ड" id="पंजिका-कार्ड-PC" style="border-color: rgba(52, 211, 153, 0.4);">
+          <div class="पंजिका-शीर्ष-भाग">
+            <span class="पंजिका-नाम">
+              <span>Program Counter (PC)</span>
+              <span class="पंजिका-टैग" style="background: rgba(52, 211, 153, 0.15); color: #6ee7b7;">16-Bit
+                Sequence</span>
+            </span>
+            <span class="पंजिका-दशमलव" id="पंजिका-दशमलव-PC">0x0800 (2048)</span>
+          </div>
+          <div class="पंजिका-बिट-पट्टिका-षोडश" id="बिट-पट्टिका-PC">
+            <!-- 16 bits (15 down to 0) -->
+          </div>
+        </div>
       </div>
 
       <!-- द्रुत पंजिका स्थापन (Quick Value Set) -->
@@ -424,6 +542,8 @@
             <option value="H">Register H</option>
             <option value="L">Register L</option>
             <option value="M">Memory [HL]</option>
+            <option value="SP">Stack Pointer (SP)</option>
+            <option value="PC">Program Counter (PC)</option>
           </select>
           <input type="text" id="द्रुत-मूल्य-निवेश" value="05H" placeholder="e.g. 05H or 5" style="width: 80px;">
           <button class="क्रिया-कुञ्जी" onclick="द्रुत_पंजिका_स्थापनम्()">Load</button>
@@ -459,14 +579,32 @@
         <h4>Contact Info</h4>
         <p>Email: info@pivotvlsi.in</p>
         <div style="margin-top: 15px; display: flex; gap: 15px;">
-          <a href="https://www.youtube.com/@PIVOT-vlsi" target="_blank" rel="noopener noreferrer" style="color: #ff0000; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="YouTube">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+          <a href="https://www.youtube.com/@PIVOT-vlsi" target="_blank" rel="noopener noreferrer"
+            style="color: #ff0000; display: inline-flex; align-items: center; transition: 0.3s;"
+            onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
+            aria-label="YouTube">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+            </svg>
           </a>
-          <a href="https://www.linkedin.com/company/pivot-vlsi/" target="_blank" rel="noopener noreferrer" style="color: #0077b5; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="LinkedIn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          <a href="https://www.linkedin.com/company/pivot-vlsi/" target="_blank" rel="noopener noreferrer"
+            style="color: #0077b5; display: inline-flex; align-items: center; transition: 0.3s;"
+            onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
+            aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+            </svg>
           </a>
-          <a href="https://github.com/pivotvlsi" target="_blank" rel="noopener noreferrer" style="color: #ffffff; display: inline-flex; align-items: center; transition: 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" aria-label="GitHub">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <a href="https://github.com/pivotvlsi" target="_blank" rel="noopener noreferrer"
+            style="color: #ffffff; display: inline-flex; align-items: center; transition: 0.3s;"
+            onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
+            aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
           </a>
         </div>
       </div>

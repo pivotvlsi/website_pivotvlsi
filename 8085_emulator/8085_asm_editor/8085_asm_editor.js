@@ -15,7 +15,6 @@ window.addEventListener('DOMContentLoaded', () => {
   window.संचिका_सञ्चयम् = संचिका_सञ्चयम्;
   window.कार्यक्रम_सत्यापनम् = कार्यक्रम_सत्यापनम्;
   window.पाठ_स्वच्छीकरणम् = पाठ_स्वच्छीकरणम्;
-  window.नमूना_भारणम् = नमूना_भारणम्;
   window.ऑपकोड_प्रविष्टि = ऑपकोड_प्रविष्टि;
 
   पंक्ति_क्रमांक_अद्यतनम्();
@@ -57,9 +56,27 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Default load 8085 arithmetic template if empty
-  if (पाठ_क्षेत्र && !पाठ_क्षेत्र.value.trim()) {
-    नमूना_भारणम्('अंकगणित');
+  // Load current program from sessionStorage if present, or leave empty
+  try {
+    const वर्तमान_संहिता = sessionStorage.getItem('अष्टशून्यपञ्चाशीति_वर्तमान_संहिता');
+    if (पाठ_क्षेत्र) {
+      if (वर्तमान_संहिता && वर्तमान_संहिता.trim()) {
+        पाठ_क्षेत्र.value = वर्तमान_संहिता;
+        कार्यक्रम_सत्यापनम्();
+      } else {
+        पाठ_क्षेत्र.value = '';
+      }
+      सम्पादित_स्थिति = false;
+      पंक्ति_क्रमांक_अद्यतनम्();
+      गणना_अद्यतनम्();
+    }
+  } catch (इ) {
+    if (पाठ_क्षेत्र) {
+      पाठ_क्षेत्र.value = '';
+      सम्पादित_स्थिति = false;
+      पंक्ति_क्रमांक_अद्यतनम्();
+      गणना_अद्यतनम्();
+    }
   }
 });
 
@@ -188,87 +205,6 @@ function ऑपकोड_प्रविष्टि(संकेत) {
   सम्पादित_स्थिति = true;
   पंक्ति_क्रमांक_अद्यतनम्();
   गणना_अद्यतनम्();
-}
-
-// 8085 नमूना भारणम् (Load 8085 Starter Templates)
-function नमूना_भारणम्(प्रकार) {
-  const पाठ_क्षेत्र = document.getElementById('संहिता-पाठ-क्षेत्र');
-  const नाम_निवेश = document.getElementById('संचिका-नाम-निवेश');
-  if (!पाठ_क्षेत्र) return;
-
-  let संहिता = "";
-  let नाम = "program_8085.asm";
-
-  if (प्रकार === 'अंकगणित') {
-    नाम = "arithmetic_8085.asm";
-    संहिता = `; ============================================
-; Intel 8085 Microprocessor Assembly Example
-; 8-Bit Arithmetic, Logic & BCD Decimal Adjust
-; ============================================
-
-ORG 0800H       ; Set program base origin
-MVI A, 38H      ; Load immediate 38H into Accumulator
-MVI B, 45H      ; Load immediate 45H into Register B
-ADD B           ; Add B to A (A = 38H + 45H = 7DH)
-DAA             ; Decimal Adjust Accumulator for BCD (A = 83H)
-INR A           ; Increment A (A = 84H)
-MVI C, 14H      ; Load immediate 14H into Register C
-SUB C           ; Subtract C from A (A = 84H - 14H = 70H)
-ANA B           ; Bitwise AND Accumulator with B
-ORA C           ; Bitwise OR Accumulator with C
-HLT             ; Halt processor execution
-`;
-  } else if (प्रकार === 'मेमोरी_स्थानान्तरण') {
-    नाम = "memory_transfer_8085.asm";
-    संहिता = `; ============================================
-; Intel 8085 Microprocessor Assembly Example
-; Memory Array Copy Using 16-Bit HL Pointer
-; ============================================
-
-ORG 0800H       ; Program origin
-LXI H, 0850H    ; Point HL to Source memory buffer
-MVI M, 0AH      ; Store test data 0AH at [0850H]
-INX H           ; Increment pointer to 0851H
-MVI M, 14H      ; Store test data 14H at [0851H]
-LXI H, 0850H    ; Reset pointer to start of buffer
-MOV A, M        ; Load first byte from memory [M] into A
-INX H           ; Move pointer to next element
-ADD M           ; Add second byte from memory to A
-STA 0860H       ; Store final sum directly to address 0860H
-HLT             ; Halt processor
-`;
-  } else if (प्रकार === 'स्टैक_सब्रूटिन') {
-    नाम = "subroutine_8085.asm";
-    संहिता = `; ============================================
-; Intel 8085 Microprocessor Assembly Example
-; Stack Operations & Subroutine CALL / RET
-; ============================================
-
-ORG 0800H       ; Program origin
-LXI SP, 0FFFFH  ; Initialize Stack Pointer
-MVI B, 12H      ; Initialize B = 12H
-MVI C, 34H      ; Initialize C = 34H
-PUSH B          ; Push BC pair onto stack
-MVI B, 00H      ; Clear B
-MVI C, 00H      ; Clear C
-POP B           ; Pop BC pair from stack (Restores B=12H, C=34H)
-CALL 0820H      ; Call square subroutine at 0820H
-HLT             ; Halt main program
-
-ORG 0820H       ; Subroutine origin
-MVI A, 05H      ; Subroutine work: A = 5
-ADD A           ; Double A (A = 10)
-RET             ; Return to caller
-`;
-  }
-
-  पाठ_क्षेत्र.value = संहिता;
-  if (नाम_निवेश) नाम_निवेश.value = नाम;
-  वर्तमान_संचिका_नाम = नाम;
-  सम्पादित_स्थिति = false;
-  पंक्ति_क्रमांक_अद्यतनम्();
-  गणना_अद्यतनम्();
-  कार्यक्रम_सत्यापनम्();
 }
 
 // 8085 कार्यक्रम सत्यापनम् (Validate 8085 opcodes, registers, and operands)

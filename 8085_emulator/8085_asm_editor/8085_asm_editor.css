@@ -30,19 +30,78 @@ body {
   flex-direction: column;
 }
 
-/* शीर्षपट्टिका (Header) */
-.शीर्षपट्टिका {
+/* --- Navigation Header --- */
+#शीर्षपट्टिका {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  z-index: 1000;
+  background: rgba(6, 11, 26, 0.9);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(11, 15, 25, 0.88);
+  overflow: visible;
+  padding: 5px 20px;
+  box-sizing: border-box;
+}
+
+#चिह्नपात्रम् {
+  display: flex;
+  align-items: center;
+}
+
+#चिह्नम् {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+#चिह्नम्:hover {
+  transform: scale(5);
+  transform-origin: top left;
+}
+
+#मार्गसञ्चारकडी {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+  padding-right: 30px;
+}
+
+#मार्गसञ्चारकडी a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+#मार्गसञ्चारकडी a:hover {
+  color: yellow;
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* उपशीर्षपट्टिका (Actions Toolbar) */
+.उपशीर्षपट्टिका {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background: rgba(11, 15, 25, 0.95);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--फलक-सीमा);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  margin-top: 50px;
   position: sticky;
-  top: 0;
-  z-index: 100;
+  top: 50px;
+  z-index: 900;
 }
 
 .शीर्षपट्टिका-शीर्षक {
@@ -356,16 +415,71 @@ h1 {
   color: #fff;
 }
 
-/* पादलेख (Footer) */
-footer {
-  padding: 1rem 2.5rem;
-  background: rgba(5, 8, 16, 0.9);
-  border-top: 1px solid var(--फलक-सीमा);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  font-size: 0.78rem;
+/* --- Site Footer --- */
+.site-footer {
+  background: rgba(4, 7, 18, 0.98);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 50px 24px 20px;
+  margin-top: 40px;
+}
+
+.footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 35px;
+}
+
+.footer-section h4 {
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.15rem;
+}
+
+.footer-section p {
   color: var(--वर्ण-उपपाठ);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-section a {
+  display: block;
+  color: var(--वर्ण-उपपाठ);
+  text-decoration: none;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+  color: #38bdf8;
+}
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: 35px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  #मार्गसञ्चारकडी {
+    display: none;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .उपशीर्षपट्टिका {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 

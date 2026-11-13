@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIVOT VLSI | Intel 8085 Assembly (.asm) &amp; Memory Format Guide</title>
+  <meta name="description" content="Comprehensive Guide on loading Intel 8085 Assembly (.asm) files, specifying instruction addresses with ORG, address prefixes, labels, and memory directives.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --पृष्ठभूमि: #0b0f19;
+      --फलक-पृष्ठभूमि: #111827;
+      --फलक-सीमा: rgba(56, 189, 248, 0.25);
+      --प्राथमिक-वर्ण: #38bdf8;
+      --द्वितीय-वर्ण: #818cf8;
+      --पाठ-वर्ण: #f8fafc;
+      --वर्ण-उपपाठ: #94a3b8;
+      --सफलता-वर्ण: #34d399;
+      --चेतावनी-वर्ण: #fbbf24;
+      --संकट-वर्ण: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--पृष्ठभूमि);
+      color: var(--पाठ-वर्ण);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    /* शीर्षपट्टिका (Standard Navigation Header) */
+    .शीर्षपट्टिका {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--फलक-सीमा);
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .शीर्षक-समूह {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .प्रतीक-चिह्न {
+      background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+      color: #000;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 0.4rem 0.65rem;
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .शीर्षक-समूह h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .उपशीर्षक {
+      font-size: 0.8rem;
+      color: var(--वर्ण-उपपाठ);
+    }
+
+    .कडी-समूह {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .क्रिया-कुञ्जी {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid var(--फलक-सीमा);
+      color: var(--प्राथमिक-वर्ण);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .क्रिया-कुञ्जी:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--प्राथमिक-वर्ण);
+      color: #fff;
+    }
+
+    .क्रिया-कुञ्जी-प्राथमिक {
+      background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+      color: #fff;
+      border: none;
+    }
+
+    .क्रिया-कुञ्जी-प्राथमिक:hover {
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+      filter: brightness(1.1);
+    }
+
+    /* मुख्य पात्र (Main Container) */
+    .मार्गदर्शक-पात्र {
+      max-width: 1080px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .कार्ड {
+      background: var(--फलक-पृष्ठभूमि);
+      border: 1px solid var(--फलक-सीमा);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .कार्ड-शीर्षक {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--प्राथमिक-वर्ण);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+    }
+
+    .कार्ड-उपपाठ {
+      color: var(--वर्ण-उपपाठ);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* कोड ब्लॉक (Code Blocks) */
+    pre {
+      background: #060913;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    .टिप्पणी { color: #64748b; font-style: italic; }
+    .निर्देश { color: #38bdf8; font-weight: 600; }
+    .पंजी { color: #f472b6; }
+    .मूल्य { color: #fbbf24; }
+    .लेबल { color: #34d399; font-weight: 600; }
+
+    /* सारणी (Comparison / Reference Table) */
+    .सारणी-पात्र {
+      width: 100%;
+      overflow-x: auto;
+      margin: 1.25rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--फलक-सीमा);
+    }
+
+    th {
+      background: rgba(30, 41, 59, 0.8);
+      color: #38bdf8;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--फलक-सीमा);
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .सूचक-सूची {
+      margin-left: 1.5rem;
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .सूचक-सूची li {
+      margin-bottom: 0.5rem;
+      color: #cbd5e1;
+    }
+
+    .संकेत-पेटिका {
+      background: rgba(56, 189, 248, 0.08);
+      border-left: 4px solid var(--प्राथमिक-वर्ण);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+    }
+
+    /* पादलेख (Footer) */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2rem;
+      text-align: center;
+      color: var(--वर्ण-उपपाठ);
+      font-size: 0.85rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- शीर्षपट्टिका -->
+  <header class="शीर्षपट्टिका">
+    <div class="शीर्षक-समूह">
+      <div class="प्रतीक-चिह्न">8085</div>
+      <div>
+        <h1>PIVOT VLSI</h1>
+        <div class="उपशीर्षक">Intel 8085 Assembly (.asm) &amp; Memory Format Guide</div>
+      </div>
+    </div>
+    <div class="कडी-समूह">
+      <a href="8085_emulator.html" class="क्रिया-कुञ्जी क्रिया-कुञ्जी-प्राथमिक">⚡ 8085 CPU Emulator</a>
+      <a href="8085_asm_editor/8085_asm_editor.html" class="क्रिया-कुञ्जी">📝 ASM Code Studio</a>
+    </div>
+  </header>
+
+  <!-- मुख्य मार्गदर्शक पात्र -->
+  <main class="मार्गदर्शक-पात्र">
+
+    <!-- Section 1: Overview -->
+    <section class="कार्ड">
+      <h2 class="कार्ड-शीर्षक">📌 Overview &amp; Supported Assembly File Formats</h2>
+      <p class="कार्ड-उपपाठ">
+        The PIVOT VLSI Intel 8085 Microprocessor Emulator supports loading assembly files (<code>.asm</code> or <code>.txt</code>) directly into its 64KB RAM address space (<code>0000H</code> to <code>FFFFH</code>). You can specify target memory addresses using two primary conventions: the standard <strong><code>ORG</code> (Origin) directive</strong> or <strong>Address Prefix syntax</strong>.
+      </p>
+
+      <div class="सारणी-पात्र">
+        <table>
+          <thead>
+            <tr>
+              <th>Format Method</th>
+              <th>Syntax Example</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ORG Directive (Recommended)</strong></td>
+              <td><code>ORG 0800H</code> or <code>ORG 2000H</code></td>
+              <td>Sets the target memory load address for all instructions and data definitions that follow. Multiple ORGs are supported.</td>
+            </tr>
+            <tr>
+              <td><strong>Address Prefix Format</strong></td>
+              <td><code>0800H: MVI A, 05H</code> or <code>0800 MVI A, 05H</code></td>
+              <td>Standard disassembler / listing notation where each line starts with its 4-digit hexadecimal address.</td>
+            </tr>
+            <tr>
+              <td><strong>Define Byte (DB)</strong></td>
+              <td><code>DB 10H, 20H, 30H</code></td>
+              <td>Defines raw 8-bit data bytes directly into consecutive memory locations starting at the current address.</td>
+            </tr>
+            <tr>
+              <td><strong>Define Word (DW)</strong></td>
+              <td><code>DW 1234H, 0800H</code></td>
+              <td>Stores 16-bit words into memory following 8085 Little-Endian convention (low-order byte first, then high-order byte).</td>
+            </tr>
+            <tr>
+              <td><strong>Labels &amp; Comments</strong></td>
+              <td><code>LOOP: DCR C</code> &bull; <code>; comment</code></td>
+              <td>Target addresses for jumps/calls are automatically calculated and resolved; comments start with <code>;</code> or <code>//</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 2: ORG Directive in Detail -->
+    <section class="कार्ड">
+      <h2 class="कार्ड-शीर्षक">⚡ Method 1: Using the ORG Directive (Industry Standard)</h2>
+      <p class="कार्ड-उपपाठ">
+        The <code>ORG</code> (Origin) directive sets the assembly base address. Both hexadecimal (<code>0800H</code>, <code>0x0800</code>) and decimal (<code>2048</code>) values are recognized. You can place your executable program instructions at one memory segment and data tables or scratchpad buffers at another memory segment in the same file.
+      </p>
+
+      <pre><code><span class="टिप्पणी">; ==============================================================================</span>
+<span class="टिप्पणी">; PIVOT VLSI 8085 Example: Separate Program and Data Sections</span>
+<span class="टिप्पणी">; ==============================================================================</span>
+
+<span class="टिप्पणी">; --- 1. Program Code Section (Target Address: 0800H) ---</span>
+<span class="निर्देश">ORG</span> <span class="मूल्य">0800H</span>
+<span class="लेबल">START:</span>  <span class="निर्देश">LXI</span> <span class="पंजी">H</span>, <span class="मूल्य">0900H</span>      <span class="टिप्पणी">; Point HL register pair to data array at 0900H</span>
+        <span class="निर्देश">MOV</span> <span class="पंजी">A</span>, <span class="पंजी">M</span>          <span class="टिप्पणी">; Load first byte (25H) into Accumulator</span>
+        <span class="निर्देश">INX</span> <span class="पंजी">H</span>             <span class="टिप्पणी">; Increment memory pointer to 0901H</span>
+        <span class="निर्देश">ADD</span> <span class="पंजी">M</span>             <span class="टिप्पणी">; Add second byte (18H) to Accumulator</span>
+        <span class="निर्देश">STA</span> <span class="मूल्य">0950H</span>         <span class="टिप्पणी">; Store total sum at memory location 0950H</span>
+        <span class="निर्देश">HLT</span>               <span class="टिप्पणी">; Halt CPU execution</span>
+
+<span class="टिप्पणी">; --- 2. Data Memory Section (Target Address: 0900H) ---</span>
+<span class="निर्देश">ORG</span> <span class="मूल्य">0900H</span>
+<span class="लेबल">DATA1:</span>  <span class="निर्देश">DB</span>  <span class="मूल्य">25H</span>           <span class="टिप्पणी">; First input operand stored at 0900H</span>
+<span class="लेबल">DATA2:</span>  <span class="निर्देश">DB</span>  <span class="मूल्य">18H</span>           <span class="टिप्पणी">; Second input operand stored at 0901H</span>
+</code></pre>
+
+      <div class="संकेत-पेटिका">
+        💡 <strong>Automatic PC Initialization:</strong> When an <code>.asm</code> file is imported, the emulator automatically initializes the Program Counter (<code>PC</code>) to the first <code>ORG</code> address (or first instruction address), updates the Disassembly Table, and scrolls directly to that instruction!
+      </div>
+    </section>
+
+    <!-- Section 3: Address Prefix Format -->
+    <section class="कार्ड">
+      <h2 class="कार्ड-शीर्षक">📋 Method 2: Address Prefix Format (Disassembly / Listing Style)</h2>
+      <p class="कार्ड-उपपाठ">
+        If you have existing code exported from a disassembler, EPROM programmer, or laboratory manual with line addresses, you can load it directly without modifying each line:
+      </p>
+
+      <pre><code><span class="मूल्य">0800H:</span> <span class="निर्देश">MVI</span> <span class="पंजी">A</span>, <span class="मूल्य">05H</span>        <span class="टिप्पणी">; Load 05H into Accumulator</span>
+<span class="मूल्य">0802H:</span> <span class="निर्देश">MVI</span> <span class="पंजी">B</span>, <span class="मूल्य">03H</span>        <span class="टिप्पणी">; Load 03H into Register B</span>
+<span class="मूल्य">0804H:</span> <span class="निर्देश">ADD</span> <span class="पंजी">B</span>            <span class="टिप्पणी">; Accumulator = A + B (08H)</span>
+<span class="मूल्य">0805H:</span> <span class="निर्देश">STA</span> <span class="मूल्य">2000H</span>        <span class="टिप्पणी">; Store result at 2000H</span>
+<span class="मूल्य">0808H:</span> <span class="निर्देश">HLT</span>               <span class="टिप्पणी">; Halt</span>
+</code></pre>
+      <p class="कार्ड-उपपाठ" style="margin-top: 0.5rem;">
+        Note: The trailing colon is optional (e.g. <code>0800H MVI A, 05H</code> or <code>0800: MVI A, 05H</code> are also accepted).
+      </p>
+    </section>
+
+    <!-- Section 4: Step-by-Step Instructions -->
+    <section class="कार्ड">
+      <h2 class="कार्ड-शीर्षक">🚀 Step-by-Step: How to Load &amp; Run in the Emulator</h2>
+      <ol class="सूचक-सूची">
+        <li><strong>Open the Emulator:</strong> Navigate to <a href="8085_emulator.html" style="color: #38bdf8; text-decoration: underline;">8085_emulator.html</a>.</li>
+        <li><strong>Import Your File:</strong> In the left <em>Instruction Memory</em> pane, click <strong>📁 Import Assembly (.asm/.txt)</strong> and select your file.</li>
+        <li><strong>Validate Instructions:</strong> Click <strong>✔️ Validate Instructions</strong> to inspect opcodes, operand types, and syntax.</li>
+        <li><strong>Observe PC &amp; Disassembly:</strong> Notice that the <strong>Program Counter (PC)</strong> updates to your specified origin (e.g. <code>0x0800</code>), and the instruction disassembly table scrolls to and highlights that instruction row.</li>
+        <li><strong>Step or Run:</strong> Click <strong>▶ STEP</strong> for single-instruction execution or <strong>⚡ AUTO RUN</strong> for continuous clock execution.</li>
+      </ol>
+    </section>
+
+  </main>
+
+  <!-- पादलेख -->
+  <footer>
+    &copy; 2026 PIVOT VLSI. All rights reserved. Elevating your career in VLSI and Silicon Systems.
+  </footer>
+
+</body>
+</html>
